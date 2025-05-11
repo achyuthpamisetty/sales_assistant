@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSalesforce } from '../../context/SalesforceContext';
 
 const defaultTemplates = [
   `Hi [Name],\n\nI wanted to introduce you to [Product Name], a solution designed to [solve problem]. Let me know if you'd be open to a quick call!\n\nBest,\n[Your Name]`,
   `Hi [Name],\n\nJust checking in to see if you had a chance to review the previous email. I’d be happy to answer any questions.\n\nThanks,\n[Your Name]`,
-  `Hi [Name],\n\nI understand things get busy—this will be my last follow-up. If you're interested in exploring [Product], feel free to reach out anytime.\n\nAll the best,\n[Your Name]`
+  `Hi [Name],\n\nI understand things get busy-this will be my last follow-up. If you're interested in exploring [Product], feel free to reach out anytime.\n\nAll the best,\n[Your Name]`
 ];
 
 const EmailComposerComponent = () => {
@@ -12,15 +12,28 @@ const EmailComposerComponent = () => {
   const prospects = salesforce?.prospects ?? [];
 
   const [sequenceCount, setSequenceCount] = useState(1);
-  const [templates, setTemplates] = useState(defaultTemplates);
+  const [templates, setTemplates] = useState([...defaultTemplates]);
   const [delayDays, setDelayDays] = useState(3);
   const [scheduling, setScheduling] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
-  const updateTemplate = (index: number, content: string) => {
-    const newTemplates = [...templates];
-    newTemplates[index] = content;
-    setTemplates(newTemplates);
+  // Ensure templates array always matches sequenceCount
+  useEffect(() => {
+    setTemplates((prev) => {
+      const newTemplates = [...prev];
+      while (newTemplates.length < sequenceCount) {
+        newTemplates.push(defaultTemplates[newTemplates.length] || "");
+      }
+      return newTemplates.slice(0, sequenceCount);
+    });
+  }, [sequenceCount]);
+
+  const updateTemplate = (index, content) => {
+    setTemplates((prev) => {
+      const newTemplates = [...prev];
+      newTemplates[index] = content;
+      return newTemplates;
+    });
   };
 
   const handleScheduleEmails = async () => {
@@ -44,11 +57,11 @@ const EmailComposerComponent = () => {
         delayDays,
       }));
 
-      // Replace this with real backend logic or Salesforce integration
+      // Simulate API call
       console.log("Scheduling emails for open prospects:", payload);
 
       alert(`Emails scheduled for ${openProspects.length} prospect(s).`);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Email scheduling failed:", err);
       setError(err.message || "Unknown error occurred");
     } finally {
@@ -57,7 +70,7 @@ const EmailComposerComponent = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-2xl mx-auto p-4">
       {error && (
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
           Error: {error}
@@ -106,7 +119,7 @@ const EmailComposerComponent = () => {
       <button
         onClick={handleScheduleEmails}
         disabled={scheduling}
-        className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition-colors"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
       >
         {scheduling ? 'Scheduling...' : 'Schedule Emails for Open Prospects'}
       </button>
