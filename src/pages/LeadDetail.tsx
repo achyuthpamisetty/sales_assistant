@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSalesforce } from '../context/SalesforceContext';
-import { Mail, PhoneCall, Briefcase, Award, HelpCircle, ArrowLeft, Edit, FileText, UserCheck, Activity, Calendar, Star, Users, FilePlus, BarChart2, Bell } from 'lucide-react';
+import { Mail, PhoneCall, Briefcase, Award, HelpCircle, ArrowLeft, Edit, FileText, UserCheck, Activity, Calendar, Star, Users, FilePlus, BarChart2, Bell, ExternalLink } from 'lucide-react';
 
 const statusOptions = ['Open', 'Working', 'Qualified', 'Unqualified', 'Converted'];
 
@@ -38,16 +38,6 @@ const LeadDetail = () => {
   const [saving, setSaving] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
-  // Automated Follow-ups state
-  const [showFollowup, setShowFollowup] = useState(false);
-  const [followupCount, setFollowupCount] = useState(2);
-  const [followupTemplates, setFollowupTemplates] = useState([
-    '',
-    ''
-  ]);
-  const [followupDelay, setFollowupDelay] = useState(3);
-  const [personalizingIdx, setPersonalizingIdx] = useState(null);
-
   // Dummy data for demo features
   const activityTimeline = [
     { type: 'call', date: '2025-05-09', desc: 'Intro call with Sarah' },
@@ -81,6 +71,7 @@ const LeadDetail = () => {
     { name: 'James Lee', role: 'CTO', email: 'james@company.com' },
   ];
 
+  // Initialize editable fields when lead loads
   useEffect(() => {
     if (lead) {
       setEditFields({
@@ -97,11 +88,6 @@ const LeadDetail = () => {
         tags: lead.tags || 'AI, SaaS',
         notes: lead.notes || '',
       });
-      // Pre-fill followup templates with personalized defaults
-      setFollowupTemplates([
-        `Hi ${lead.firstName},\n\nJust checking in after our last conversation. Let me know if you have any questions!\n\nBest,\n[Your Name]`,
-        `Hi ${lead.firstName},\n\nWanted to touch base again. Is there a good time to connect this week?\n\nBest,\n[Your Name]`
-      ]);
     }
   }, [lead]);
 
@@ -161,6 +147,7 @@ const LeadDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto py-6 space-y-8">
+
       {/* 1. Lead Header with Salesforce Link, Owner, Status, Score, Tags */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-xl shadow border">
         <div>
@@ -222,92 +209,6 @@ const LeadDetail = () => {
             <Edit size={16}/> {showEdit ? 'Cancel' : 'Edit'}
           </button>
         </div>
-      </div>
-
-      {/* Automated Follow-ups with Personalized Email Writing */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold text-lg flex items-center gap-2">
-            <Mail size={18} /> Automated Follow-ups
-          </h2>
-          <button
-            className="text-blue-600 hover:underline text-sm"
-            onClick={() => setShowFollowup(v => !v)}
-          >
-            {showFollowup ? 'Hide' : 'Setup'}
-          </button>
-        </div>
-        {showFollowup && (
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Number of Follow-ups</label>
-              <select
-                className="ml-2 border rounded p-1"
-                value={followupCount}
-                onChange={e => {
-                  const count = Number(e.target.value);
-                  setFollowupCount(count);
-                  setFollowupTemplates(prev => {
-                    const arr = [...prev];
-                    while (arr.length < count) arr.push('');
-                    return arr.slice(0, count);
-                  });
-                }}
-              >
-                {[1, 2, 3].map(n => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Days Between Follow-ups</label>
-              <input
-                type="number"
-                min={1}
-                className="ml-2 border rounded p-1 w-20"
-                value={followupDelay}
-                onChange={e => setFollowupDelay(Number(e.target.value))}
-              />
-            </div>
-            {Array.from({ length: followupCount }).map((_, idx) => (
-              <div key={idx} className="mb-3">
-                <label className="text-sm font-medium">Email {idx + 1}</label>
-                {personalizingIdx === idx ? (
-                  <textarea
-                    className="w-full border rounded p-2 mt-1"
-                    rows={5}
-                    value={followupTemplates[idx]}
-                    onChange={e => {
-                      const arr = [...followupTemplates];
-                      arr[idx] = e.target.value;
-                      setFollowupTemplates(arr);
-                    }}
-                    onBlur={() => setPersonalizingIdx(null)}
-                    autoFocus
-                  />
-                ) : (
-                  <div
-                    className="w-full border rounded p-2 mt-1 bg-slate-50 cursor-pointer whitespace-pre-wrap"
-                    onClick={() => setPersonalizingIdx(idx)}
-                    title="Click to personalize"
-                  >
-                    {followupTemplates[idx] || <span className="text-slate-400">Click to write personalized email...</span>}
-                  </div>
-                )}
-              </div>
-            ))}
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              onClick={() => {
-                alert(
-                  `Scheduled ${followupCount} follow-up(s) for ${editFields.firstName} with ${followupDelay} day(s) between each.`
-                );
-              }}
-            >
-              Schedule Follow-ups
-            </button>
-          </div>
-        )}
       </div>
 
       {/* 3. Notifications/Alerts */}
@@ -379,8 +280,141 @@ const LeadDetail = () => {
         </div>
       )}
 
-      {/* ...rest of your sections (score breakdown, insights, suggested emails, etc) ... */}
-      {/* ... No changes needed below ... */}
+      {/* 5. Lead Score Breakdown */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Star size={18}/> Lead Score Breakdown</h2>
+        <ul className="list-disc list-inside text-sm text-slate-700">
+          {leadScoreBreakdown.map((item, idx) => (
+            <li key={idx}>{item.label} <span className="text-xs text-slate-500 ml-2">+{item.value}</span></li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 6. Insights */}
+      <div className="bg-white rounded-xl shadow border p-6 flex flex-col gap-3">
+        <h2 className="font-semibold text-lg mb-1">Insights</h2>
+        <ul className="space-y-2 text-slate-700 text-sm">
+          <li><strong>Conversation Summary:</strong> {insights.gong}</li>
+          <li><strong>LinkedIn:</strong> {insights.linkedin}</li>
+          <li><strong>ZoomInfo:</strong> {insights.zoominfo}</li>
+        </ul>
+      </div>
+
+      {/* 7. Suggested Emails */}
+      <div className="bg-white rounded-xl shadow border p-6 flex flex-col gap-3">
+        <h2 className="font-semibold text-lg mb-1">Suggested Emails</h2>
+        {emailSuggestions.map((email, idx) => (
+          <div key={idx} className="border p-3 rounded bg-slate-50 text-sm whitespace-pre-wrap mb-2">
+            {email}
+            <button className="mt-3 bg-blue-600 text-white py-1 px-3 rounded-full text-xs flex items-center gap-1"
+              onClick={() => sendEmail(email)}
+              disabled={sendingIdx === idx}
+            >
+              {sendingIdx === idx ? 'Sending...' : <><Mail size={14}/> Send Email</>}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* 8. Activity Timeline */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Activity size={18}/> Activity Timeline</h2>
+        <ul className="divide-y">
+          {activityTimeline.map((act, idx) => (
+            <li key={idx} className="py-2 flex items-center gap-2">
+              <span className="rounded-full bg-slate-100 px-2 py-1 text-xs">{act.type}</span>
+              <span className="text-xs text-slate-500">{act.date}</span>
+              <span className="text-sm">{act.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 9. Notes & Comments */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><FileText size={18}/> Notes & Comments</h2>
+        <ul className="space-y-2">
+          {notes.map((note, idx) => (
+            <li key={idx} className="border rounded p-2 bg-slate-50">
+              <span className="font-semibold">{note.user}</span> <span className="text-xs text-slate-500">{note.date}</span>
+              <div>{note.text}</div>
+            </li>
+          ))}
+        </ul>
+        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Add Note</button>
+      </div>
+
+      {/* 10. Attachments */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><BarChart2 size={18}/> Attachments</h2>
+        <ul className="space-y-2">
+          {attachments.map((att, idx) => (
+            <li key={idx} className="flex items-center gap-2">
+              <a href={att.url} className="text-blue-600 hover:underline">{att.file}</a>
+              <span className="text-xs text-slate-500">uploaded {att.uploaded}</span>
+            </li>
+          ))}
+        </ul>
+        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Upload File</button>
+      </div>
+
+      {/* 11. Tasks for this Lead */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Calendar size={18}/> Tasks</h2>
+        <ul className="space-y-2">
+          {tasks.map((t, idx) => (
+            <li key={idx} className="flex items-center gap-2">
+              <input type="checkbox" checked={t.done} readOnly />
+              <span className={t.done ? "line-through text-slate-400" : ""}>{t.task}</span>
+              <span className="text-xs text-slate-500">Due {t.due}</span>
+            </li>
+          ))}
+        </ul>
+        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Add Task</button>
+      </div>
+
+      {/* 12. Related Contacts */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Users size={18}/> Related Contacts</h2>
+        <ul className="space-y-2">
+          {relatedContacts.map((c, idx) => (
+            <li key={idx} className="flex flex-col">
+              <span className="font-semibold">{c.name}</span>
+              <span className="text-xs text-slate-500">{c.role}</span>
+              <span className="text-xs text-blue-600">{c.email}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 13. Audit Log */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><UserCheck size={18}/> Audit Log</h2>
+        <ul className="list-disc list-inside text-sm text-slate-700">
+          <li>2025-05-11: Owner changed to Alice</li>
+          <li>2025-05-10: Status updated to Qualified</li>
+          <li>2025-05-09: Lead created by Bob</li>
+        </ul>
+      </div>
+
+      {/* 14. Lead Conversion Button */}
+      <div className="bg-white rounded-xl shadow border p-6 flex items-center justify-between">
+        <div>
+          <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><UserCheck size={18}/> Convert Lead</h2>
+          <p className="text-sm text-slate-700">Ready to convert this lead to an opportunity or account?</p>
+        </div>
+        <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg font-bold">Convert Lead</button>
+      </div>
+
+      {/* 15. Resource Center */}
+      <div className="bg-white rounded-xl shadow border p-6">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
+        <ul className="list-disc list-inside text-sm text-slate-700">
+          <li><a href="#" className="text-blue-600 hover:underline">Lead Nurturing Guide</a></li>
+          <li><a href="#" className="text-blue-600 hover:underline">CRM Video Tutorials</a></li>
+          <li><a href="#" className="text-blue-600 hover:underline">Contact Support</a></li>
+        </ul>
+      </div>
     </div>
   );
 };
