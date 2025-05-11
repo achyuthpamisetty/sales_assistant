@@ -4,17 +4,39 @@ import { useSalesforce } from '../context/SalesforceContext';
 import StatCard from '../components/dashboard/StatCard';
 import OpportunityChart from '../components/dashboard/OpportunityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
-import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign } from 'lucide-react';
+import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Award, Calendar, Mail, HelpCircle, BarChart2 } from 'lucide-react';
+
+// Dummy data for demonstration
+const teamLeaderboard = [
+  { name: 'Alice Johnson', deals: 15, revenue: 120000 },
+  { name: 'Bob Smith', deals: 12, revenue: 95000 },
+  { name: 'Priya Patel', deals: 10, revenue: 87000 },
+];
+const recentComms = [
+  { type: 'email', who: 'Sarah Parker', when: 'Today, 9:15 AM', subject: 'Intro to SalesAI Pro' },
+  { type: 'call', who: 'Tom Nguyen', when: 'Yesterday, 4:00 PM', subject: 'Follow-up Call' },
+  { type: 'email', who: 'Olivia Lee', when: 'Yesterday, 11:30 AM', subject: 'Proposal Sent' },
+];
+const companyNews = [
+  { headline: 'Acme Corp wins CRM Innovation Award 2025', url: '#' },
+  { headline: 'Quarterly earnings exceed expectations', url: '#' },
+];
+const helpLinks = [
+  { label: 'Getting Started Guide', url: '#' },
+  { label: 'CRM Video Tutorials', url: '#' },
+  { label: 'Contact Support', url: '#' },
+];
 
 const Dashboard = () => {
   const { leads, accounts, contacts, opportunities, loading } = useSalesforce();
+  const userName = "John Doe"; // Replace with real user name if available
 
-  // Add sample leads with leadScore
+  // Add sample leads with leadScore and more fields
   const sampleLeads = [
-    { id: 'l1', firstName: 'Sarah', lastName: 'Parker', email: 'sarah@example.com', leadScore: 82 },
-    { id: 'l2', firstName: 'Tom', lastName: 'Nguyen', email: 'tom@example.com', leadScore: 91 },
-    { id: 'l3', firstName: 'Olivia', lastName: 'Lee', email: 'olivia@example.com', leadScore: 78 },
-    { id: 'l4', firstName: 'James', lastName: 'Patel', email: 'james@example.com', leadScore: 60 },
+    { id: 'l1', firstName: 'Sarah', lastName: 'Parker', email: 'sarah@example.com', company: 'Acme Corp', phone: '+1 555-1234', salesforceUrl: 'https://your-instance.salesforce.com/l1', leadScore: 82 },
+    { id: 'l2', firstName: 'Tom', lastName: 'Nguyen', email: 'tom@example.com', company: 'Dev Solutions', phone: '+1 555-5678', salesforceUrl: 'https://your-instance.salesforce.com/l2', leadScore: 91 },
+    { id: 'l3', firstName: 'Olivia', lastName: 'Lee', email: 'olivia@example.com', company: 'HealthFirst', phone: '+1 555-8765', salesforceUrl: 'https://your-instance.salesforce.com/l3', leadScore: 78 },
+    { id: 'l4', firstName: 'James', lastName: 'Patel', email: 'james@example.com', company: 'FinTech Ltd', phone: '+1 555-4321', salesforceUrl: 'https://your-instance.salesforce.com/l4', leadScore: 60 },
   ];
   const leadsToUse = (leads.length === 0 ? sampleLeads : leads).map(lead => ({
     ...lead,
@@ -98,8 +120,43 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
 
+      {/* 1. Personalized Welcome */}
+      <div className="flex items-center gap-4 py-2">
+        <span className="text-2xl">👋</span>
+        <h1 className="text-2xl font-bold text-slate-900">Good morning, {userName}!</h1>
+      </div>
+
+      {/* 2. Quick Actions */}
+      <div className="flex gap-3 flex-wrap">
+        <Link to="/leads/new" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          <Users size={18} /> Add Lead
+        </Link>
+        <Link to="/opportunities/new" className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition">
+          <Briefcase size={18} /> New Opportunity
+        </Link>
+        <Link to="/activities/new" className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+          <PhoneCall size={18} /> Log Activity
+        </Link>
+        <Link to="/import" className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+          <BarChart2 size={18} /> Import Data
+        </Link>
+      </div>
+
+      {/* 3. Reminders & Alerts */}
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 flex items-center gap-4 shadow-sm">
+        <span className="text-yellow-600 text-xl"><Flame /></span>
+        <div>
+          <p className="font-semibold">Reminders</p>
+          <ul className="list-disc list-inside text-sm text-yellow-800">
+            <li>3 opportunities need follow-up today</li>
+            <li>2 tasks are overdue</li>
+            <li>New lead assigned: Emma Williams</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* 4. Stat Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard 
           title="Total Revenue" 
@@ -138,13 +195,116 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* Chart and Task Section */}
+      {/* 5. Pipeline Health/Funnel */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm flex flex-col md:flex-row gap-8 items-center">
+        <div className="flex-1">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Pipeline Health</h2>
+          <div className="flex gap-4">
+            {opportunityData.labels.map((stage, idx) => (
+              <div key={stage} className="flex flex-col items-center">
+                <div className="rounded-full bg-blue-100 text-blue-700 font-bold w-12 h-12 flex items-center justify-center mb-1">
+                  {opportunityData.datasets[0].data[idx] / 1000}k
+                </div>
+                <span className="text-xs text-slate-600">{stage}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* 6. Goal Tracking */}
+        <div className="flex-1">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Goal Progress</h2>
+          <p className="text-sm text-slate-600 mb-1">Q2 Revenue Goal: $2,000,000</p>
+          <div className="w-full bg-slate-200 rounded-full h-4">
+            <div className="bg-green-600 h-4 rounded-full text-right pr-2 text-white text-xs flex items-center justify-end"
+              style={{ width: `${Math.min((totalRevenue / 2000000) * 100, 100)}%` }}>
+              {Math.round((totalRevenue / 2000000) * 100)}%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 7. Team Leaderboard */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-slate-600">
+              <th className="text-left py-1">Rep</th>
+              <th className="text-left py-1">Deals</th>
+              <th className="text-left py-1">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamLeaderboard.map(rep => (
+              <tr key={rep.name} className="border-t">
+                <td className="py-1">{rep.name}</td>
+                <td className="py-1">{rep.deals}</td>
+                <td className="py-1">${rep.revenue.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 8. Recent Communications */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Mail size={18}/> Recent Communications</h2>
+        <ul className="divide-y">
+          {recentComms.map((comm, idx) => (
+            <li key={idx} className="py-2 flex justify-between items-center">
+              <div>
+                <span className="font-medium">{comm.who}</span>
+                <span className="ml-2 text-xs text-slate-500">{comm.when}</span>
+                <div className="text-sm text-slate-700">{comm.subject}</div>
+              </div>
+              <span className="text-xs text-slate-500">{comm.type === 'email' ? '📧' : '📞'}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 9. Activity Heatmap (Demo) */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Calendar size={18}/> Activity Heatmap</h2>
+        <div className="flex gap-2">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
+            <div key={day} className="flex flex-col items-center gap-1">
+              <span className="text-xs text-slate-600">{day}</span>
+              <div className="w-8 h-8 rounded bg-green-200 flex items-center justify-center font-bold text-green-800">
+                {Math.floor(Math.random() * 10) + 1}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-slate-500 mt-1"># of logged activities per day</p>
+      </div>
+
+      {/* 10. Company News & Resource Center */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="mb-3 text-lg font-semibold text-slate-900">Company News</h2>
+          <ul className="list-disc list-inside text-sm text-slate-700">
+            {companyNews.map((news, idx) => (
+              <li key={idx}><a href={news.url} className="text-blue-600 hover:underline">{news.headline}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
+          <ul className="list-disc list-inside text-sm text-slate-700">
+            {helpLinks.map((hl, idx) => (
+              <li key={idx}><a href={hl.url} className="text-blue-600 hover:underline">{hl.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Existing: Chart and Task Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <OpportunityChart data={opportunityData} />
         <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">Upcoming Tasks</h2>
           <div className="space-y-3">
-            {/* ... tasks as in previous version ... */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Follow up with Sarah Parker</p>
@@ -169,7 +329,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Activities and Opportunities */}
+      {/* Existing: Activities and Opportunities */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <RecentActivity activities={recentActivities} />
         <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -216,7 +376,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* High-Scoring Leads Section */}
+      {/* Improved High-Scoring Leads Section */}
       <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div className="border-b p-4">
           <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
@@ -224,33 +384,44 @@ const Dashboard = () => {
         <div className="divide-y">
           {highScoringLeads.length > 0 ? (
             highScoringLeads.slice(0, 3).map(lead => (
-              <Link
-                key={lead.id}
-                to={`/leads/${lead.id}`}
-                className="block p-4 hover:bg-slate-50 transition-colors"
-              >
+              <div key={lead.id} className="block p-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{lead.firstName} {lead.lastName}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-base">{lead.firstName} {lead.lastName}</span>
+                      {lead.salesforceUrl && (
+                        <a
+                          href={lead.salesforceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="View in Salesforce"
+                          className="inline-flex items-center"
+                        >
+                          {/* Salesforce logo SVG */}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" className="ml-1">
+                            <circle cx="16" cy="16" r="16" fill="#00A1E0"/>
+                            <text x="16" y="22" textAnchor="middle" fontSize="15" fill="#fff" fontFamily="Arial, sans-serif">SF</text>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-500">{lead.company}</p>
+                    <p className="text-sm text-slate-500">{lead.phone}</p>
                     <p className="text-sm text-slate-500">{lead.email}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right min-w-[90px]">
                     <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
                       Score: {lead.leadScore}
                     </span>
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  <div className="w-full rounded-full bg-slate-200">
-                    <div
-                      className="rounded-full bg-green-600 p-0.5 text-center text-xs font-medium leading-none text-green-100"
-                      style={{ width: `${lead.leadScore}%` }}
-                    >
-                      {/* Optional: show % inside bar if desired */}
+                    <div className="mt-2 w-full rounded-full bg-slate-200 h-2">
+                      <div
+                        className="rounded-full bg-green-600 h-2"
+                        style={{ width: `${lead.leadScore}%` }}
+                      />
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))
           ) : (
             <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
