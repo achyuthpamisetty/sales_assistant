@@ -203,56 +203,28 @@ const Dashboard = () => {
         </div>
       </div>
 
-    {/* High-Scoring Leads Section */}
-<div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-  <div className="border-b p-4">
-    <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
-  </div>
-  <div className="divide-y">
-    {highScoringLeads.length > 0 ? (
-      highScoringLeads.slice(0, 3).map(lead => (
-        <Link
-          key={lead.id}
-          to={`/leads/${lead.id}`}
-          className="block p-4 hover:bg-slate-50 transition-colors"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{lead.firstName} {lead.lastName}</p>
-              <p className="text-sm text-slate-500">{lead.email}</p>
-            </div>
-            <div className="text-right">
-              <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
-                Score: {lead.leadScore}
-              </span>
-            </div>
-          </div>
-          <div className="mt-2 flex items-center">
-            <div className="w-full rounded-full bg-slate-200">
-              <div
-                className="rounded-full bg-green-600 p-0.5 text-center text-xs font-medium leading-none text-green-100"
-                style={{ width: `${lead.leadScore}%` }}
-              >
-                {/* Optional: show % inside bar if desired */}
-              </div>
-            </div>
-          </div>
-        </Link>
-      ))
-    ) : (
-      <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
-    )}
-  </div>
-  <div className="border-t p-3">
-    <Link
-      to="/leads"
-      className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
-    >
-      View All Leads
-    </Link>
-  </div>
-</div>
-
+      {/* New High Scoring Leads Section */}
+      <div className="rounded-lg border border-slate-200 bg-white shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">High-Scoring Leads</h2>
+        {highScoringLeads.length > 0 ? (
+          <ul className="space-y-3">
+            {highScoringLeads.map(lead => (
+              <li key={lead.id} className="p-4 rounded-md bg-slate-50 flex justify-between items-center">
+                <div>
+                  <p className="font-medium">{lead.firstName} {lead.lastName}</p>
+                  <p className="text-sm text-slate-600">{lead.email}</p>
+                </div>
+                <span className="rounded-full bg-green-100 text-green-800 text-xs px-3 py-1 font-semibold">
+                  Lead Score: {lead.leadScore}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-slate-600 text-sm">No high-scoring leads found.</p>
+        )}
+      </div>
+    </div>
   );
 };
 
