@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 7, 71, 166;
+    --color-secondary: 58, 67, 116;
+    --color-accent: 255, 86, 48;
+    --color-success: 0, 135, 90;
+    --color-warning: 255, 171, 0;
+    --color-error: 229, 57, 53;
+    --color-info: 66, 133, 244;
+  }
+  
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-3xl leading-tight md:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl leading-tight md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl leading-tight md:text-2xl;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-600 text-white hover:bg-secondary-700 focus-visible:ring-secondary-500;
+  }
+  
+  .btn-outline {
+    @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-400;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-slate-700 hover:bg-slate-100 focus-visible:ring-slate-400;
+  }
+  
+  .card {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md;
+  }
+
+  .input {
+    @apply rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+  
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800;
+  }
+  
+  .badge-secondary {
+    @apply bg-secondary-100 text-secondary-800;
+  }
+  
+  .badge-success {
+    @apply bg-success-100 text-success-800;
+  }
+  
+  .badge-warning {
+    @apply bg-warning-100 text-warning-800;
+  }
+  
+  .badge-error {
+    @apply bg-error-100 text-error-800;
+  }
+  
+  .badge-info {
+    @apply bg-info-100 text-info-800;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}
