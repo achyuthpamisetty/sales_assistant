@@ -1,6 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useSalesforce } from '../../context/SalesforceContext';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+/* ---- Salesforce Context ---- */
+const SalesforceContext = createContext(null);
+
+const dummyProspects = [
+  { id: 1, name: "Alice", email: "alice@example.com", status: "Open" },
+  { id: 2, name: "Bob", email: "bob@example.com", status: "Closed" },
+  { id: 3, name: "Charlie", email: "charlie@example.com", status: "Open" }
+];
+
+export const SalesforceProvider = ({ children }) => {
+  const [prospects] = useState(dummyProspects);
+  return (
+    <SalesforceContext.Provider value={{ prospects }}>
+      {children}
+    </SalesforceContext.Provider>
+  );
+};
+
+export const useSalesforce = () => useContext(SalesforceContext);
+
+/* ---- Email Composer Component ---- */
 const defaultTemplates = [
   `Hi [Name],\n\nI wanted to introduce you to [Product Name], a solution designed to [solve problem]. Let me know if you'd be open to a quick call!\n\nBest,\n[Your Name]`,
   `Hi [Name],\n\nJust checking in to see if you had a chance to review the previous email. I’d be happy to answer any questions.\n\nThanks,\n[Your Name]`,
@@ -17,7 +38,7 @@ const EmailComposerComponent = () => {
   const [scheduling, setScheduling] = useState(false);
   const [error, setError] = useState(null);
 
-  // Ensure templates array always matches sequenceCount
+  // Keep templates array in sync with sequenceCount
   useEffect(() => {
     setTemplates((prev) => {
       const newTemplates = [...prev];
@@ -71,6 +92,7 @@ const EmailComposerComponent = () => {
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Email Composer</h1>
       {error && (
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
           Error: {error}
@@ -127,4 +149,21 @@ const EmailComposerComponent = () => {
   );
 };
 
-export default EmailComposerComponent;
+/* ---- App Component with Routing ---- */
+function App() {
+  return (
+    <SalesforceProvider>
+      <BrowserRouter>
+        <nav style={{ margin: 16 }}>
+          <Link to="/emails" style={{ marginRight: 8 }}>Email Composer</Link>
+        </nav>
+        <Routes>
+          <Route path="/emails" element={<EmailComposerComponent />} />
+          <Route path="*" element={<div style={{ padding: 16 }}>Welcome! Go to <Link to="/emails">Email Composer</Link></div>} />
+        </Routes>
+      </BrowserRouter>
+    </SalesforceProvider>
+  );
+}
+
+export default App;
