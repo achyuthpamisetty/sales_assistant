@@ -16,7 +16,6 @@ const Dashboard = () => {
     { id: 'l3', firstName: 'Olivia', lastName: 'Lee', email: 'olivia@example.com', leadScore: 78 },
     { id: 'l4', firstName: 'James', lastName: 'Patel', email: 'james@example.com', leadScore: 60 },
   ];
-
   const leadsToUse = (leads.length === 0 ? sampleLeads : leads).map(lead => ({
     ...lead,
     leadScore: lead.leadScore ?? Math.floor(Math.random() * 50 + 50),
@@ -112,7 +111,7 @@ const Dashboard = () => {
         <StatCard 
           title="Leads" 
           value={leads.length} 
-          change={5.2} 
+          change={5.2}
           icon={Users} 
           color="bg-blue-600"
         />
@@ -146,6 +145,20 @@ const Dashboard = () => {
           <h2 className="mb-4 text-lg font-semibold text-slate-900">Upcoming Tasks</h2>
           <div className="space-y-3">
             {/* ... tasks as in previous version ... */}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Follow up with Sarah Parker</p>
+                <p className="text-sm text-slate-500">Tomorrow, 10:00 AM</p>
+              </div>
+              <span className="rounded-full bg-blue-100 text-blue-800 text-xs px-3 py-1 font-semibold">Call</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Send Proposal to Tom Nguyen</p>
+                <p className="text-sm text-slate-500">Tomorrow, 2:00 PM</p>
+              </div>
+              <span className="rounded-full bg-green-100 text-green-800 text-xs px-3 py-1 font-semibold">Email</span>
+            </div>
           </div>
           <div className="mt-4">
             <Link to="/calendar" className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700">
@@ -184,8 +197,8 @@ const Dashboard = () => {
                 </div>
                 <div className="mt-2 flex items-center">
                   <div className="w-full rounded-full bg-slate-200">
-                    <div 
-                      className="rounded-full bg-primary-600 p-0.5 text-center text-xs font-medium leading-none text-primary-100" 
+                    <div
+                      className="rounded-full bg-primary-600 p-0.5 text-center text-xs font-medium leading-none text-primary-100"
                       style={{ width: `${opp.probability}%` }}
                     >
                       {opp.probability}%
@@ -203,26 +216,54 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* New High Scoring Leads Section */}
-      <div className="rounded-lg border border-slate-200 bg-white shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">High-Scoring Leads</h2>
-        {highScoringLeads.length > 0 ? (
-          <ul className="space-y-3">
-            {highScoringLeads.map(lead => (
-              <li key={lead.id} className="p-4 rounded-md bg-slate-50 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{lead.firstName} {lead.lastName}</p>
-                  <p className="text-sm text-slate-600">{lead.email}</p>
+      {/* High-Scoring Leads Section */}
+      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="border-b p-4">
+          <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
+        </div>
+        <div className="divide-y">
+          {highScoringLeads.length > 0 ? (
+            highScoringLeads.slice(0, 3).map(lead => (
+              <Link
+                key={lead.id}
+                to={`/leads/${lead.id}`}
+                className="block p-4 hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{lead.firstName} {lead.lastName}</p>
+                    <p className="text-sm text-slate-500">{lead.email}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
+                      Score: {lead.leadScore}
+                    </span>
+                  </div>
                 </div>
-                <span className="rounded-full bg-green-100 text-green-800 text-xs px-3 py-1 font-semibold">
-                  Lead Score: {lead.leadScore}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-slate-600 text-sm">No high-scoring leads found.</p>
-        )}
+                <div className="mt-2 flex items-center">
+                  <div className="w-full rounded-full bg-slate-200">
+                    <div
+                      className="rounded-full bg-green-600 p-0.5 text-center text-xs font-medium leading-none text-green-100"
+                      style={{ width: `${lead.leadScore}%` }}
+                    >
+                      {/* Optional: show % inside bar if desired */}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
+          )}
+        </div>
+        <div className="border-t p-3">
+          <Link
+            to="/leads"
+            className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
+          >
+            View All Leads
+          </Link>
+        </div>
       </div>
     </div>
   );
