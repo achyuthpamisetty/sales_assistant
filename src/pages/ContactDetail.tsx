@@ -20,6 +20,7 @@ const ContactDetail = () => {
     tags: '',
     owner: '',
   });
+  const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Demo data for activity, notes, etc.
@@ -69,11 +70,14 @@ const ContactDetail = () => {
     setFields(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleEdit = () => setEditing(true);
+
   const handleSave = async () => {
     setSaving(true);
     try {
       await updateContact(contact.id, fields);
       alert('Contact updated!');
+      setEditing(false);
     } catch (e) {
       alert('Failed to update contact.');
     }
@@ -94,7 +98,7 @@ const ContactDetail = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-6 space-y-8">
-      {/* Header and Editable Details */}
+      {/* Header and Details Section */}
       <div className="bg-white rounded-xl shadow border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -116,89 +120,135 @@ const ContactDetail = () => {
               )}
             </div>
           </div>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1"
-            onClick={handleSave}
-            disabled={saving}
-          >
-            <Edit size={16}/> {saving ? 'Saving...' : 'Save'}
-          </button>
+          {!editing ? (
+            <button
+              className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 flex items-center gap-1"
+              onClick={handleEdit}
+            >
+              <Edit size={16}/> Edit
+            </button>
+          ) : (
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1"
+              onClick={handleSave}
+              disabled={saving}
+            >
+              <Edit size={16}/> {saving ? 'Saving...' : 'Save'}
+            </button>
+          )}
         </div>
-        {/* Always-visible editable fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm font-medium">First Name</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.firstName}
-              onChange={e => handleFieldChange('firstName', e.target.value)}
-            />
+        {/* Details: view or edit mode */}
+        {!editing ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs text-slate-500">First Name</label>
+              <div className="font-medium">{fields.firstName}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Last Name</label>
+              <div className="font-medium">{fields.lastName}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Title</label>
+              <div className="font-medium">{fields.title}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Company</label>
+              <div className="font-medium">{fields.company}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Email</label>
+              <div className="font-medium">{fields.email}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Phone</label>
+              <div className="font-medium">{fields.phone}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Tags</label>
+              <div className="font-medium">{fields.tags}</div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Owner</label>
+              <div className="font-medium">{fields.owner}</div>
+            </div>
           </div>
-          <div>
-            <label className="text-sm font-medium">Last Name</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.lastName}
-              onChange={e => handleFieldChange('lastName', e.target.value)}
-            />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium">First Name</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.firstName}
+                onChange={e => handleFieldChange('firstName', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Last Name</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.lastName}
+                onChange={e => handleFieldChange('lastName', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Title</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.title}
+                onChange={e => handleFieldChange('title', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Company</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.company}
+                onChange={e => handleFieldChange('company', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <input
+                type="email"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.email}
+                onChange={e => handleFieldChange('email', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Phone</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.phone}
+                onChange={e => handleFieldChange('phone', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Tags</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.tags}
+                onChange={e => handleFieldChange('tags', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Owner</label>
+              <input
+                type="text"
+                className="w-full border rounded p-2 mt-1"
+                value={fields.owner}
+                onChange={e => handleFieldChange('owner', e.target.value)}
+              />
+            </div>
           </div>
-          <div>
-            <label className="text-sm font-medium">Title</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.title}
-              onChange={e => handleFieldChange('title', e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Company</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.company}
-              onChange={e => handleFieldChange('company', e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Email</label>
-            <input
-              type="email"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.email}
-              onChange={e => handleFieldChange('email', e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Phone</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.phone}
-              onChange={e => handleFieldChange('phone', e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Tags</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.tags}
-              onChange={e => handleFieldChange('tags', e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Owner</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2 mt-1"
-              value={fields.owner}
-              onChange={e => handleFieldChange('owner', e.target.value)}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Activities */}
