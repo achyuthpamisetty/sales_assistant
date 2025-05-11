@@ -8,11 +8,14 @@ const defaultTemplates = [
 ];
 
 const EmailComposerComponent = () => {
-  const { prospects } = useSalesforce(); // Assumes you have open prospects in your context
+  const salesforce = useSalesforce();
+  const prospects = salesforce?.prospects ?? [];
+
   const [sequenceCount, setSequenceCount] = useState(1);
   const [templates, setTemplates] = useState(defaultTemplates);
   const [delayDays, setDelayDays] = useState(3);
   const [scheduling, setScheduling] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const updateTemplate = (index: number, content: string) => {
     const newTemplates = [...templates];
@@ -22,12 +25,15 @@ const EmailComposerComponent = () => {
 
   const handleScheduleEmails = async () => {
     setScheduling(true);
+    setError(null);
+
     try {
-      const openProspects = prospects?.filter(p => p.status === 'Open') || [];
+      if (!Array.isArray(prospects)) throw new Error("Prospect data is not available.");
+
+      const openProspects = prospects.filter(p => p.status === 'Open' && p.email);
 
       if (openProspects.length === 0) {
-        alert("No open prospects found.");
-        setScheduling(false);
+        setError("No open prospects with valid emails found.");
         return;
       }
 
@@ -38,13 +44,13 @@ const EmailComposerComponent = () => {
         delayDays,
       }));
 
-      // Replace this with an actual API call to schedule emails
-      console.log("Scheduling emails:", payload);
+      // Replace this with real backend logic or Salesforce integration
+      console.log("Scheduling emails for open prospects:", payload);
 
       alert(`Emails scheduled for ${openProspects.length} prospect(s).`);
-    } catch (err) {
-      console.error(err);
-      alert("Error scheduling emails.");
+    } catch (err: any) {
+      console.error("Email scheduling failed:", err);
+      setError(err.message || "Unknown error occurred");
     } finally {
       setScheduling(false);
     }
@@ -52,10 +58,16 @@ const EmailComposerComponent = () => {
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
+          Error: {error}
+        </div>
+      )}
+
       <div className="flex flex-col space-y-2">
         <label className="text-sm font-medium text-slate-700">Email Sequence Count</label>
-        <select 
-          value={sequenceCount} 
+        <select
+          value={sequenceCount}
           onChange={(e) => setSequenceCount(Number(e.target.value))}
           className="rounded border border-slate-300 p-2 w-40"
         >
