@@ -17,7 +17,6 @@ const OpportunityDetail = lazy(() => import('./pages/OpportunityDetail'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
-const integrations = lazy(() => import('./pages/admin/Permissions'));
 
 function App() {
   return (
