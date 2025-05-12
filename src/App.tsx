@@ -14,7 +14,7 @@ const Contacts = lazy(() => import('./pages/Contacts'));
 const ContactDetail = lazy(() => import('./pages/ContactDetail'));
 const Opportunities = lazy(() => import('./pages/Opportunities'));
 const OpportunityDetail = lazy(() => import('./pages/OpportunityDetail'));
-const opportunities pipeline = lazy(() => import('./pages/opportunities pipeline'));
+const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
 
