@@ -72,7 +72,6 @@ const RecentEmails = () => (
 );
 // ------------------------------------------------------------
 
-// Dummy data for demonstration
 const teamLeaderboard = [
   { name: 'Alice Johnson', deals: 15, revenue: 120000 },
   { name: 'Bob Smith', deals: 12, revenue: 95000 },
@@ -395,114 +394,6 @@ const Dashboard = () => {
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
-        </div>
-      </div>
-
-      {/* Existing: Activities and Opportunities */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <RecentActivity activities={recentActivities} />
-        <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="border-b p-4">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Opportunities</h2>
-          </div>
-          <div className="divide-y">
-            {opportunities.slice(0, 3).map(opp => (
-              <Link key={opp.id} to={`/opportunities/${opp.id}`} className="block p-4 hover:bg-slate-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{opp.name}</p>
-                    <p className="text-sm text-slate-500">{opp.accountName}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">${opp.amount.toLocaleString()}</p>
-                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
-                      opp.stage === 'Proposal' ? 'bg-blue-100 text-blue-800' :
-                      opp.stage === 'Negotiation' ? 'bg-amber-100 text-amber-800' :
-                      'bg-slate-100 text-slate-800'
-                    }`}>
-                      {opp.stage}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  <div className="w-full rounded-full bg-slate-200">
-                    <div
-                      className="rounded-full bg-primary-600 p-0.5 text-center text-xs font-medium leading-none text-primary-100"
-                      style={{ width: `${opp.probability}%` }}
-                    >
-                      {opp.probability}%
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="border-t p-3">
-            <Link to="/opportunities" className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors">
-              View All Opportunities
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Improved High-Scoring Leads Section */}
-      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-        <div className="border-b p-4">
-          <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
-        </div>
-        <div className="divide-y">
-          {highScoringLeads.length > 0 ? (
-            highScoringLeads.slice(0, 3).map(lead => (
-              <div key={lead.id} className="block p-4 hover:bg-slate-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-base">{lead.firstName} {lead.lastName}</span>
-                      {lead.salesforceUrl && (
-                        <a
-                          href={lead.salesforceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="View in Salesforce"
-                          className="inline-flex items-center"
-                        >
-                          {/* Salesforce logo SVG */}
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" className="ml-1">
-                            <circle cx="16" cy="16" r="16" fill="#00A1E0"/>
-                            <text x="16" y="22" textAnchor="middle" fontSize="15" fill="#fff" fontFamily="Arial, sans-serif">SF</text>
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-500">{lead.company}</p>
-                    <p className="text-sm text-slate-500">{lead.phone}</p>
-                    <p className="text-sm text-slate-500">{lead.email}</p>
-                  </div>
-                  <div className="text-right min-w-[90px]">
-                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
-                      Score: {lead.leadScore}
-                    </span>
-                    <div className="mt-2 w-full rounded-full bg-slate-200 h-2">
-                      <div
-                        className="rounded-full bg-green-600 h-2"
-                        style={{ width: `${lead.leadScore}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
-          )}
-        </div>
-        <div className="border-t p-3">
-          <Link
-            to="/leads"
-            className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
-          >
-            View All Leads
-          </Link>
         </div>
       </div>
     </div>
