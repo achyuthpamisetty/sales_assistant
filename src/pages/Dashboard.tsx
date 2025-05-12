@@ -289,28 +289,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 7. Team Leaderboard */}
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-slate-600">
-              <th className="text-left py-1">Rep</th>
-              <th className="text-left py-1">Deals</th>
-              <th className="text-left py-1">Revenue</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teamLeaderboard.map(rep => (
-              <tr key={rep.name} className="border-t">
-                <td className="py-1">{rep.name}</td>
-                <td className="py-1">{rep.deals}</td>
-                <td className="py-1">${rep.revenue.toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  
 
       {/* 8. Recent Communications */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -506,6 +485,28 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+        {/* 7. Team Leaderboard */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-slate-600">
+              <th className="text-left py-1">Rep</th>
+              <th className="text-left py-1">Deals</th>
+              <th className="text-left py-1">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamLeaderboard.map(rep => (
+              <tr key={rep.name} className="border-t">
+                <td className="py-1">{rep.name}</td>
+                <td className="py-1">{rep.deals}</td>
+                <td className="py-1">${rep.revenue.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
   );
 };
 
