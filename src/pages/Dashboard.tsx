@@ -221,6 +221,95 @@ const Dashboard = () => {
           </ul>
         </div>
       </div>
+import React, { useEffect, useState } from "react";
+import { Sparkles, Mail, TrendingUp, Users, PhoneCall } from "lucide-react";
+
+const dummyLeadSuggestions = [
+  { id: 1, name: "Sarah Parker", action: "Schedule a demo", reason: "High engagement: Opened 3 emails, visited pricing page" },
+  { id: 2, name: "Tom Nguyen", action: "Send follow-up email", reason: "No reply in 3 days, high lead score" },
+  { id: 3, name: "Olivia Lee", action: "Call this week", reason: "Asked about onboarding, high intent" },
+];
+
+const aiEmailTemplates = [
+  {
+    id: 1,
+    subject: "Let's Schedule Your Personalized Demo",
+    body: `Hi Sarah,\n\nI'd love to show you how our platform can help Acme Corp achieve its Q3 goals. Are you available this week for a quick demo?\n\nBest,\nJohn`,
+  },
+  {
+    id: 2,
+    subject: "Checking In – Any Questions?",
+    body: `Hi Tom,\n\nJust wanted to check in and see if you had any questions about the proposal I sent. Happy to jump on a call if helpful!\n\nBest,\nJohn`,
+  },
+];
+
+const dummySentiment = [
+  { callWith: "Sarah Parker", summary: "Very positive, interested in AI features. Next step: Demo.", sentiment: "😊 Positive" },
+  { callWith: "Tom Nguyen", summary: "Neutral, requested more info on pricing. Next step: Send proposal.", sentiment: "😐 Neutral" },
+];
+
+const AiSuggestions = () => {
+  const [loading, setLoading] = useState(true);
+  const [leadSuggestions, setLeadSuggestions] = useState([]);
+  const [emailTemplates, setEmailTemplates] = useState([]);
+  const [sentiments, setSentiments] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLeadSuggestions(dummyLeadSuggestions);
+      setEmailTemplates(aiEmailTemplates);
+      setSentiments(dummySentiment);
+      setLoading(false);
+    }, 900);
+  }, []);
+
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm space-y-5">
+      <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+        <Sparkles size={18} /> AI-Powered Suggestions
+      </h2>
+      {loading ? <div className="text-slate-500">Loading AI insights...</div> : (
+        <>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><TrendingUp size={16}/> Next Best Actions</h3>
+            <ul className="list-disc list-inside text-sm text-slate-700 space-y-1">
+              {leadSuggestions.map(s => (
+                <li key={s.id}>
+                  <span className="font-medium">{s.name}:</span> {s.action} <span className="text-xs text-slate-500">({s.reason})</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><Mail size={16}/> AI Email Templates</h3>
+            <ul className="space-y-2">
+              {emailTemplates.map(t => (
+                <li key={t.id} className="border rounded p-2 bg-slate-50">
+                  <div className="font-medium">{t.subject}</div>
+                  <pre className="text-xs text-slate-600 whitespace-pre-wrap">{t.body}</pre>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><PhoneCall size={16}/> Sentiment & Call Summaries</h3>
+            <ul className="space-y-2">
+              {sentiments.map((s, i) => (
+                <li key={i} className="border rounded p-2 bg-slate-50">
+                  <div className="font-medium">Call with {s.callWith}</div>
+                  <div className="text-xs text-slate-600">{s.summary}</div>
+                  <div className="text-xs">{s.sentiment}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default AiSuggestions;
 
       {/* 4. Stat Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
