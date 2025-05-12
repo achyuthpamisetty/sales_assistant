@@ -1,6 +1,0 @@
-import SlackPage from './pages/SlackPage';
-import GmailOutlookPage from './pages/GmailOutlookPage';
-
-// In your router:
-<Route path="/slack" element={<SlackPage />} />
-<Route path="/email" element={<GmailOutlookPage />} />
