@@ -1,130 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import { useSalesforce } from '../../context/SalesforceContext';
+import React from 'react';
+import { useSalesforce } from '../context/SalesforceContext';
+import { Briefcase, DollarSign, Calendar, User, Tag, Plus } from 'lucide-react';
 
-const defaultTemplates = [
-  `Hi [Name],\n\nI wanted to introduce you to [Product Name], a solution designed to [solve problem]. Let me know if you'd be open to a quick call!\n\nBest,\n[Your Name]`,
-  `Hi [Name],\n\nJust checking in to see if you had a chance to review the previous email. I’d be happy to answer any questions.\n\nThanks,\n[Your Name]`,
-  `Hi [Name],\n\nI understand things get busy-this will be my last follow-up. If you're interested in exploring [Product], feel free to reach out anytime.\n\nAll the best,\n[Your Name]`
+const STAGES = [
+  { key: 'Needs Analysis', color: 'bg-slate-100', text: 'text-slate-800' },
+  { key: 'Qualification', color: 'bg-yellow-100', text: 'text-yellow-800' },
+  { key: 'Negotiation', color: 'bg-amber-100', text: 'text-amber-800' },
+  { key: 'Proposal', color: 'bg-indigo-100', text: 'text-indigo-800' },
+  { key: 'Closed Won', color: 'bg-green-100', text: 'text-green-800' },
+  { key: 'Closed Lost', color: 'bg-red-100', text: 'text-red-800' },
 ];
 
-const EmailComposerComponent = () => {
-  const salesforce = useSalesforce();
-  const prospects = salesforce?.prospects ?? [];
+const getStageColor = (stage) => {
+  const found = STAGES.find(s => s.key === stage);
+  return found ? `${found.color} ${found.text}` : 'bg-slate-100 text-slate-800';
+};
 
-  const [sequenceCount, setSequenceCount] = useState(1);
-  const [templates, setTemplates] = useState([...defaultTemplates]);
-  const [delayDays, setDelayDays] = useState(3);
-  const [scheduling, setScheduling] = useState(false);
-  const [error, setError] = useState(null);
+const OpportunitiesPipeline = () => {
+  const { opportunities, loading } = useSalesforce();
 
-  // Ensure templates array always matches sequenceCount
-  useEffect(() => {
-    setTemplates((prev) => {
-      const newTemplates = [...prev];
-      while (newTemplates.length < sequenceCount) {
-        newTemplates.push(defaultTemplates[newTemplates.length] || "");
-      }
-      return newTemplates.slice(0, sequenceCount);
-    });
-  }, [sequenceCount]);
-
-  const updateTemplate = (index, content) => {
-    setTemplates((prev) => {
-      const newTemplates = [...prev];
-      newTemplates[index] = content;
-      return newTemplates;
-    });
-  };
-
-  const handleScheduleEmails = async () => {
-    setScheduling(true);
-    setError(null);
-
-    try {
-      if (!Array.isArray(prospects)) throw new Error("Prospect data is not available.");
-
-      const openProspects = prospects.filter(p => p.status === 'Open' && p.email);
-
-      if (openProspects.length === 0) {
-        setError("No open prospects with valid emails found.");
-        return;
-      }
-
-      const payload = openProspects.map(prospect => ({
-        prospectId: prospect.id,
-        prospectEmail: prospect.email,
-        sequence: templates.slice(0, sequenceCount),
-        delayDays,
-      }));
-
-      // Simulate API call
-      console.log("Scheduling emails for open prospects:", payload);
-
-      alert(`Emails scheduled for ${openProspects.length} prospect(s).`);
-    } catch (err) {
-      console.error("Email scheduling failed:", err);
-      setError(err.message || "Unknown error occurred");
-    } finally {
-      setScheduling(false);
-    }
-  };
+  // Group opportunities by stage
+  const grouped = {};
+  STAGES.forEach(stage => grouped[stage.key] = []);
+  opportunities.forEach(opp => {
+    if (grouped[opp.stage]) grouped[opp.stage].push(opp);
+    else grouped[opp.stage] = [opp];
+  });
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto p-4">
-      {error && (
-        <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
-          Error: {error}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Opportunities Pipeline</h1>
+          <p className="text-slate-500">Visualize, track, and manage your sales pipeline</p>
         </div>
-      )}
-
-      <div className="flex flex-col space-y-2">
-        <label className="text-sm font-medium text-slate-700">Email Sequence Count</label>
-        <select
-          value={sequenceCount}
-          onChange={(e) => setSequenceCount(Number(e.target.value))}
-          className="rounded border border-slate-300 p-2 w-40"
-        >
-          <option value={1}>1 Email</option>
-          <option value={2}>2 Emails</option>
-          <option value={3}>3 Emails</option>
-        </select>
+        <button className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors">
+          <Plus className="mr-2 h-4 w-4" />
+          New Opportunity
+        </button>
       </div>
-
-      {Array.from({ length: sequenceCount }).map((_, i) => (
-        <div key={i} className="space-y-2">
-          <label className="text-sm font-semibold text-slate-800">Email {i + 1} Content</label>
-          <textarea
-            rows={6}
-            value={templates[i]}
-            onChange={(e) => updateTemplate(i, e.target.value)}
-            className="w-full border rounded p-2 text-sm"
-            placeholder={`Email ${i + 1} content...`}
-          />
+      <div className="overflow-x-auto pb-4">
+        <div className="flex gap-4 min-w-[900px]">
+          {STAGES.map(stage => (
+            <div
+              key={stage.key}
+              className="flex-1 min-w-[270px] bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col"
+            >
+              <div className={`flex items-center justify-between px-4 py-3 border-b ${stage.color}`}>
+                <span className={`font-semibold ${stage.text}`}>{stage.key}</span>
+                <span className={`text-xs ${stage.text}`}>{grouped[stage.key].length} Contacts</span>
+              </div>
+              <button
+                className="flex items-center justify-center gap-1 text-xs text-primary-600 border-b border-slate-200 py-2 hover:bg-slate-100 transition"
+                onClick={() => alert(`Add contact to ${stage.key}`)}
+              >
+                <Plus size={14} /> Add Contact
+              </button>
+              <div className="flex-1 px-2 py-2 space-y-3 overflow-y-auto min-h-[80px]">
+                {grouped[stage.key].length === 0 && (
+                  <div className="text-xs text-slate-400 text-center py-4">No opportunities</div>
+                )}
+                {grouped[stage.key].map(opp => (
+                  <div
+                    key={opp.id}
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-3 shadow-sm space-y-1 hover:bg-slate-100 transition"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Briefcase className="h-4 w-4 text-slate-400" />
+                      <span className="font-semibold text-slate-900">{opp.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-600">
+                      <DollarSign className="h-3 w-3" />
+                      <span>${opp.amount.toLocaleString()}</span>
+                      <Calendar className="h-3 w-3 ml-2" />
+                      <span>{opp.closeDate}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <User className="h-3 w-3" />
+                      <span>{opp.contactName}</span>
+                      <Tag className="h-3 w-3 ml-2" />
+                      <span>{opp.type}</span>
+                    </div>
+                    <div className="mt-1">
+                      <div className="h-1 w-full rounded-full bg-slate-200">
+                        <div
+                          className="h-1 rounded-full bg-primary-600"
+                          style={{ width: `${opp.probability}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-right text-slate-400">{opp.probability}%</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-
-      {sequenceCount > 1 && (
-        <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium text-slate-700">Delay between emails (in days)</label>
-          <input
-            type="number"
-            min={1}
-            value={delayDays}
-            onChange={(e) => setDelayDays(Number(e.target.value))}
-            className="w-40 border border-slate-300 rounded p-2"
-          />
-        </div>
-      )}
-
-      <button
-        onClick={handleScheduleEmails}
-        disabled={scheduling}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-      >
-        {scheduling ? 'Scheduling...' : 'Schedule Emails for Open Prospects'}
-      </button>
+      </div>
     </div>
   );
 };
 
-export default EmailComposerComponent;
+export default OpportunitiesPipeline;
