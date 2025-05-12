@@ -5,8 +5,9 @@ import StatCard from '../components/dashboard/StatCard';
 import OpportunityChart from '../components/dashboard/OpportunityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Award, Calendar, Mail, HelpCircle, BarChart2 } from 'lucide-react';
+import React from "react";
+import { Mail, Plus } from "lucide-react";
 
-// --- Recent Emails Component (inline for single file use) ---
 const dummyEmails = [
   {
     id: "1",
@@ -33,11 +34,21 @@ const dummyEmails = [
     source: "Gmail",
   },
 ];
+
 const RecentEmails = () => (
-  <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-    <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2">
-      <Mail size={18} /> Recent Emails (Gmail/Outlook)
-    </h2>
+  <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm relative">
+    <div className="flex items-center justify-between mb-3">
+      <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+        <Mail size={18} /> Recent Emails (Gmail/Outlook)
+      </h2>
+      <button
+        className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition text-sm"
+        onClick={() => alert("Open compose email modal or navigate to compose page")}
+        title="Compose New Email"
+      >
+        <Plus size={16} /> New Email
+      </button>
+    </div>
     <ul className="divide-y">
       {dummyEmails.map((email) => (
         <li key={email.id} className="py-3">
@@ -70,7 +81,8 @@ const RecentEmails = () => (
     </div>
   </div>
 );
-// ------------------------------------------------------------
+
+export default RecentEmails;
 
 // Dummy data for demonstration
 const teamLeaderboard = [
