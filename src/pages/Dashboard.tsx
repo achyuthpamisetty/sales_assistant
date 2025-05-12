@@ -482,10 +482,7 @@ const Dashboard = () => {
           >
             View All Leads
           </Link>
-        </div>
-      </div>
-    </div>
-        {/* 7. Team Leaderboard */}
+              {/* 7. Team Leaderboard */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
         <table className="w-full text-sm">
@@ -507,6 +504,10 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+        </div>
+      </div>
+    </div>
+  
   );
 };
 
