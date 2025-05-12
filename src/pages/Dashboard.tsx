@@ -221,6 +221,45 @@ const Dashboard = () => {
           </ul>
         </div>
       </div>
+
+      {/* 4. Stat Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <StatCard 
+          title="Total Revenue" 
+          value={`$${totalRevenue.toLocaleString()}`} 
+          change={15.8} 
+          icon={DollarSign} 
+          color="bg-green-600"
+        />
+        <StatCard 
+          title="Leads" 
+          value={leads.length} 
+          change={5.2}
+          icon={Users} 
+          color="bg-blue-600"
+        />
+        <StatCard 
+          title="Accounts" 
+          value={accounts.length} 
+          change={2.3} 
+          icon={Briefcase} 
+          color="bg-indigo-600"
+        />
+        <StatCard 
+          title="Contacts" 
+          value={contacts.length} 
+          change={-1.5} 
+          icon={PhoneCall} 
+          color="bg-violet-600"
+        />
+        <StatCard 
+          title="Open Opportunities" 
+          value={`$${(1750000).toLocaleString()}`} 
+          change={12.5} 
+          icon={TrendingUp} 
+          color="bg-teal-600"
+        />
+      </div>
 import React, { useEffect, useState } from "react";
 import { Sparkles, Mail, TrendingUp, Users, PhoneCall } from "lucide-react";
 
@@ -310,45 +349,6 @@ const AiSuggestions = () => {
 };
 
 export default AiSuggestions;
-
-      {/* 4. Stat Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <StatCard 
-          title="Total Revenue" 
-          value={`$${totalRevenue.toLocaleString()}`} 
-          change={15.8} 
-          icon={DollarSign} 
-          color="bg-green-600"
-        />
-        <StatCard 
-          title="Leads" 
-          value={leads.length} 
-          change={5.2}
-          icon={Users} 
-          color="bg-blue-600"
-        />
-        <StatCard 
-          title="Accounts" 
-          value={accounts.length} 
-          change={2.3} 
-          icon={Briefcase} 
-          color="bg-indigo-600"
-        />
-        <StatCard 
-          title="Contacts" 
-          value={contacts.length} 
-          change={-1.5} 
-          icon={PhoneCall} 
-          color="bg-violet-600"
-        />
-        <StatCard 
-          title="Open Opportunities" 
-          value={`$${(1750000).toLocaleString()}`} 
-          change={12.5} 
-          icon={TrendingUp} 
-          color="bg-teal-600"
-        />
-      </div>
 
       {/* 5. Pipeline Health/Funnel */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm flex flex-col md:flex-row gap-8 items-center">
