@@ -291,23 +291,7 @@ const Dashboard = () => {
 
   
 
-      {/* 8. Recent Communications */}
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Mail size={18}/> Recent Communications</h2>
-        <ul className="divide-y">
-          {recentComms.map((comm, idx) => (
-            <li key={idx} className="py-2 flex justify-between items-center">
-              <div>
-                <span className="font-medium">{comm.who}</span>
-                <span className="ml-2 text-xs text-slate-500">{comm.when}</span>
-                <div className="text-sm text-slate-700">{comm.subject}</div>
-              </div>
-              <span className="text-xs text-slate-500">{comm.type === 'email' ? '📧' : '📞'}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
+     
       {/* 9. Activity Heatmap (Demo) */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Calendar size={18}/> Activity Heatmap</h2>
