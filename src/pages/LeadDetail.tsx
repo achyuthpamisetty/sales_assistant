@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSalesforce } from '../context/SalesforceContext';
-import { Mail, PhoneCall, Briefcase, Award, HelpCircle, ArrowLeft, Edit, FileText, UserCheck, Activity, Calendar, Star, Users, FilePlus, BarChart2, Bell, ExternalLink } from 'lucide-react';
+import {
+  Mail, PhoneCall, Briefcase, Award, HelpCircle, ArrowLeft, Edit,
+  FileText, UserCheck, Activity, Calendar, Star, Users, FilePlus, BarChart2, Bell
+} from 'lucide-react';
 
 const statusOptions = ['Open', 'Working', 'Qualified', 'Unqualified', 'Converted'];
 
@@ -27,11 +30,16 @@ const LeadDetail = () => {
     notes: '',
   });
 
+  // Improved Insights state
   const [insights, setInsights] = useState({
-    gong: '',
     linkedin: '',
-    zoominfo: '',
+    funding: '',
+    news: '',
+    gong: '',
+    tech: '',
+    reviews: '',
   });
+  const [insightsLoading, setInsightsLoading] = useState(false);
 
   const [emailSuggestions, setEmailSuggestions] = useState([]);
   const [sendingIdx, setSendingIdx] = useState(null);
@@ -91,13 +99,22 @@ const LeadDetail = () => {
     }
   }, [lead]);
 
+  // Improved Insights fetching
   useEffect(() => {
     if (!lead) return;
-    setInsights({
-      gong: `Recent calls: ${lead.firstName} discussed budget and AI tools.`,
-      linkedin: `${lead.firstName} shared a post about AI in sales.`,
-      zoominfo: `${lead.company} recently raised Series B funding.`,
-    });
+    setInsightsLoading(true);
+    setTimeout(() => {
+      setInsights({
+        linkedin: `🔗 ${lead.company} featured in LinkedIn News: "${lead.company} expands into APAC market."`,
+        funding: `💸 ${lead.company} raised $25M Series B funding from Sequoia Capital in March 2025.`,
+        news: `📰 Forbes: "${lead.company} launches AI-powered sales platform" (May 2025)`,
+        gong: `🎤 Gong transcript: "${lead.firstName} asked about onboarding speed and integration with Salesforce. Expressed urgency to deploy before Q3."`,
+        tech: `🛠️ BuiltWith: ${lead.company} recently migrated to HubSpot and adopted Segment.`,
+        reviews: `⭐ Glassdoor: Employee reviews highlight strong growth and focus on innovation.`,
+      });
+      setInsightsLoading(false);
+    }, 1200);
+
     setEmailSuggestions([
       `Hi ${lead.firstName},\n\nSaw your recent post on AI in sales-really insightful. Let's connect!\n\nBest,\n[Your Name]`,
       `Hi ${lead.firstName},\n\nCongrats on your recent funding! Ready to explore how we can partner?\n\nCheers,\n[Your Name]`
@@ -147,8 +164,7 @@ const LeadDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto py-6 space-y-8">
-
-      {/* 1. Lead Header with Salesforce Link, Owner, Status, Score, Tags */}
+      {/* Lead Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-xl shadow border">
         <div>
           <Link to="/leads" className="inline-flex items-center text-blue-600 hover:underline mb-2">
@@ -174,249 +190,3 @@ const LeadDetail = () => {
             </span>
             {editFields.status && (
               <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ml-2 ${
-                editFields.status === 'Open' ? 'bg-blue-100 text-blue-800' :
-                editFields.status === 'Working' ? 'bg-yellow-100 text-yellow-800' :
-                editFields.status === 'Qualified' ? 'bg-green-100 text-green-800' :
-                editFields.status === 'Unqualified' ? 'bg-red-100 text-red-800' :
-                'bg-slate-100 text-slate-800'
-              }`}>
-                {editFields.status}
-              </span>
-            )}
-            <span className="inline-flex rounded-full bg-violet-100 text-violet-800 text-xs px-2 py-1 ml-2">
-              Owner: {editFields.owner}
-            </span>
-            <span className="inline-flex rounded-full bg-slate-100 text-slate-800 text-xs px-2 py-1 ml-2">
-              Source: {editFields.source}
-            </span>
-            <span className="inline-flex rounded-full bg-orange-100 text-orange-800 text-xs px-2 py-1 ml-2">
-              Tags: {editFields.tags}
-            </span>
-          </div>
-        </div>
-        {/* 2. Quick Actions */}
-        <div className="flex gap-2 mt-4 md:mt-0">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1">
-            <PhoneCall size={16}/> Log Call
-          </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-1">
-            <Mail size={16}/> Send Email
-          </button>
-          <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 flex items-center gap-1">
-            <Award size={16}/> Add Note
-          </button>
-          <button className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 flex items-center gap-1" onClick={() => setShowEdit(v => !v)}>
-            <Edit size={16}/> {showEdit ? 'Cancel' : 'Edit'}
-          </button>
-        </div>
-      </div>
-
-      {/* 3. Notifications/Alerts */}
-      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 flex items-center gap-4 shadow-sm">
-        {notifications.map((n, i) => (
-          <div key={i} className="flex items-center gap-2 text-yellow-800 text-sm">{n.icon}{n.text}</div>
-        ))}
-      </div>
-
-      {/* 4. Editable Lead Details Form */}
-      {showEdit && (
-        <div className="bg-white rounded-xl shadow border p-6">
-          <h2 className="font-semibold text-lg mb-4">Edit Lead Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">First Name</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.firstName} onChange={e => handleFieldChange('firstName', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Last Name</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.lastName} onChange={e => handleFieldChange('lastName', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Company</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.company} onChange={e => handleFieldChange('company', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Email</label>
-              <input type="email" className="w-full border rounded p-2 mt-1" value={editFields.email} onChange={e => handleFieldChange('email', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Phone</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.phone} onChange={e => handleFieldChange('phone', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Lead Score</label>
-              <input type="number" min={0} max={100} className="w-full border rounded p-2 mt-1" value={editFields.leadScore} onChange={e => handleFieldChange('leadScore', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Status</label>
-              <select className="w-full border rounded p-2 mt-1" value={editFields.status} onChange={e => handleFieldChange('status', e.target.value)}>
-                {statusOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Salesforce URL</label>
-              <input type="url" className="w-full border rounded p-2 mt-1" value={editFields.salesforceUrl} onChange={e => handleFieldChange('salesforceUrl', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Owner</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.owner} onChange={e => handleFieldChange('owner', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Source</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.source} onChange={e => handleFieldChange('source', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Tags</label>
-              <input type="text" className="w-full border rounded p-2 mt-1" value={editFields.tags} onChange={e => handleFieldChange('tags', e.target.value)} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Notes</label>
-              <textarea className="w-full border rounded p-2 mt-1" value={editFields.notes} onChange={e => handleFieldChange('notes', e.target.value)} />
-            </div>
-          </div>
-          <button className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : 'Save Details'}
-          </button>
-        </div>
-      )}
-
-      {/* 5. Lead Score Breakdown */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Star size={18}/> Lead Score Breakdown</h2>
-        <ul className="list-disc list-inside text-sm text-slate-700">
-          {leadScoreBreakdown.map((item, idx) => (
-            <li key={idx}>{item.label} <span className="text-xs text-slate-500 ml-2">+{item.value}</span></li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 6. Insights */}
-      <div className="bg-white rounded-xl shadow border p-6 flex flex-col gap-3">
-        <h2 className="font-semibold text-lg mb-1">Insights</h2>
-        <ul className="space-y-2 text-slate-700 text-sm">
-          <li><strong>Conversation Summary:</strong> {insights.gong}</li>
-          <li><strong>LinkedIn:</strong> {insights.linkedin}</li>
-          <li><strong>ZoomInfo:</strong> {insights.zoominfo}</li>
-        </ul>
-      </div>
-
-      {/* 7. Suggested Emails */}
-      <div className="bg-white rounded-xl shadow border p-6 flex flex-col gap-3">
-        <h2 className="font-semibold text-lg mb-1">Suggested Emails</h2>
-        {emailSuggestions.map((email, idx) => (
-          <div key={idx} className="border p-3 rounded bg-slate-50 text-sm whitespace-pre-wrap mb-2">
-            {email}
-            <button className="mt-3 bg-blue-600 text-white py-1 px-3 rounded-full text-xs flex items-center gap-1"
-              onClick={() => sendEmail(email)}
-              disabled={sendingIdx === idx}
-            >
-              {sendingIdx === idx ? 'Sending...' : <><Mail size={14}/> Send Email</>}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* 8. Activity Timeline */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Activity size={18}/> Activity Timeline</h2>
-        <ul className="divide-y">
-          {activityTimeline.map((act, idx) => (
-            <li key={idx} className="py-2 flex items-center gap-2">
-              <span className="rounded-full bg-slate-100 px-2 py-1 text-xs">{act.type}</span>
-              <span className="text-xs text-slate-500">{act.date}</span>
-              <span className="text-sm">{act.desc}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 9. Notes & Comments */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><FileText size={18}/> Notes & Comments</h2>
-        <ul className="space-y-2">
-          {notes.map((note, idx) => (
-            <li key={idx} className="border rounded p-2 bg-slate-50">
-              <span className="font-semibold">{note.user}</span> <span className="text-xs text-slate-500">{note.date}</span>
-              <div>{note.text}</div>
-            </li>
-          ))}
-        </ul>
-        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Add Note</button>
-      </div>
-
-      {/* 10. Attachments */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><BarChart2 size={18}/> Attachments</h2>
-        <ul className="space-y-2">
-          {attachments.map((att, idx) => (
-            <li key={idx} className="flex items-center gap-2">
-              <a href={att.url} className="text-blue-600 hover:underline">{att.file}</a>
-              <span className="text-xs text-slate-500">uploaded {att.uploaded}</span>
-            </li>
-          ))}
-        </ul>
-        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Upload File</button>
-      </div>
-
-      {/* 11. Tasks for this Lead */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Calendar size={18}/> Tasks</h2>
-        <ul className="space-y-2">
-          {tasks.map((t, idx) => (
-            <li key={idx} className="flex items-center gap-2">
-              <input type="checkbox" checked={t.done} readOnly />
-              <span className={t.done ? "line-through text-slate-400" : ""}>{t.task}</span>
-              <span className="text-xs text-slate-500">Due {t.due}</span>
-            </li>
-          ))}
-        </ul>
-        <button className="mt-3 bg-indigo-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"><FilePlus size={14}/> Add Task</button>
-      </div>
-
-      {/* 12. Related Contacts */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><Users size={18}/> Related Contacts</h2>
-        <ul className="space-y-2">
-          {relatedContacts.map((c, idx) => (
-            <li key={idx} className="flex flex-col">
-              <span className="font-semibold">{c.name}</span>
-              <span className="text-xs text-slate-500">{c.role}</span>
-              <span className="text-xs text-blue-600">{c.email}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 13. Audit Log */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><UserCheck size={18}/> Audit Log</h2>
-        <ul className="list-disc list-inside text-sm text-slate-700">
-          <li>2025-05-11: Owner changed to Alice</li>
-          <li>2025-05-10: Status updated to Qualified</li>
-          <li>2025-05-09: Lead created by Bob</li>
-        </ul>
-      </div>
-
-      {/* 14. Lead Conversion Button */}
-      <div className="bg-white rounded-xl shadow border p-6 flex items-center justify-between">
-        <div>
-          <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><UserCheck size={18}/> Convert Lead</h2>
-          <p className="text-sm text-slate-700">Ready to convert this lead to an opportunity or account?</p>
-        </div>
-        <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg font-bold">Convert Lead</button>
-      </div>
-
-      {/* 15. Resource Center */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
-        <ul className="list-disc list-inside text-sm text-slate-700">
-          <li><a href="#" className="text-blue-600 hover:underline">Lead Nurturing Guide</a></li>
-          <li><a href="#" className="text-blue-600 hover:underline">CRM Video Tutorials</a></li>
-          <li><a href="#" className="text-blue-600 hover:underline">Contact Support</a></li>
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-export default LeadDetail;
