@@ -4,14 +4,9 @@ import { useSalesforce } from '../context/SalesforceContext';
 import StatCard from '../components/dashboard/StatCard';
 import OpportunityChart from '../components/dashboard/OpportunityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
-import PipelineHealth from '../components/dashboard/PipelineHealth';
-import GoalProgress from '../components/dashboard/GoalProgress';
-import TeamLeaderboard from '../components/dashboard/TeamLeaderboard';
-import RecentEmails from '../components/dashboard/RecentEmails';
-import ActivityHeatmap from '../components/dashboard/ActivityHeatmap';
-import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Mail, HelpCircle, BarChart2 } from 'lucide-react';
+import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Award, Calendar, Mail, HelpCircle, BarChart2 } from 'lucide-react';
 
-// Dummy data for demonstration
+// --- Recent Emails Component (inline for single file use) ---
 const dummyEmails = [
   {
     id: "1",
@@ -38,7 +33,46 @@ const dummyEmails = [
     source: "Gmail",
   },
 ];
+const RecentEmails = () => (
+  <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2">
+      <Mail size={18} /> Recent Emails (Gmail/Outlook)
+    </h2>
+    <ul className="divide-y">
+      {dummyEmails.map((email) => (
+        <li key={email.id} className="py-3">
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="font-medium">{email.from}</span>
+              <span className="ml-2 text-xs text-slate-500">{email.date}</span>
+              <div className="text-sm text-slate-700">{email.subject}</div>
+              <div className="text-xs text-slate-500 truncate">{email.snippet}</div>
+            </div>
+            <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
+              email.source === "Gmail"
+                ? "bg-red-100 text-red-700"
+                : "bg-blue-100 text-blue-700"
+            }`}>
+              {email.source}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <div className="mt-3 text-right">
+      <a
+        href="#"
+        className="text-blue-600 text-sm hover:underline"
+        title="View all emails"
+      >
+        View all emails
+      </a>
+    </div>
+  </div>
+);
+// ------------------------------------------------------------
 
+// Dummy data for demonstration
 const teamLeaderboard = [
   { name: 'Alice Johnson', deals: 15, revenue: 120000 },
   { name: 'Bob Smith', deals: 12, revenue: 95000 },
@@ -61,7 +95,7 @@ const helpLinks = [
 
 const Dashboard = () => {
   const { leads, accounts, contacts, opportunities, loading } = useSalesforce();
-  const userName = "John Doe";
+  const userName = "John Doe"; // Replace with real user name if available
 
   // Add sample leads with leadScore and more fields
   const sampleLeads = [
@@ -94,6 +128,45 @@ const Dashboard = () => {
     ],
   };
 
+  const recentActivities = [
+    {
+      id: '1',
+      type: 'call',
+      title: 'Call with David Chen',
+      date: 'Today, 2:30 PM',
+      description: 'Discussed technical requirements for platform upgrade',
+      contact: 'David Chen',
+      account: 'Cloudburst Technologies',
+    },
+    {
+      id: '2',
+      type: 'email',
+      title: 'Email to Priya Patel',
+      date: 'Today, 11:15 AM',
+      description: 'Sent follow-up about product roadmap discussion',
+      contact: 'Priya Patel',
+      account: 'Cloudburst Technologies',
+    },
+    {
+      id: '3',
+      type: 'meeting',
+      title: 'Contract Review Meeting',
+      date: 'Yesterday',
+      description: 'Reviewed terms with legal team and purchasing',
+      contact: 'Robert Johnson',
+      account: 'Summit Financial Group',
+    },
+    {
+      id: '4',
+      type: 'note',
+      title: 'New Lead Qualification',
+      date: '2 days ago',
+      description: 'Emma Williams shows high interest in data management solutions',
+      contact: 'Emma Williams',
+      account: 'HealthFirst Technologies',
+    },
+  ];
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -113,6 +186,7 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
+
       {/* 1. Personalized Welcome */}
       <div className="flex items-center gap-4 py-2">
         <span className="text-2xl">👋</span>
@@ -187,16 +261,58 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* 5. Pipeline Health/Funnel and Goal Progress */}
+      {/* 5. Pipeline Health/Funnel */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm flex flex-col md:flex-row gap-8 items-center">
-        <PipelineHealth opportunityData={opportunityData} />
-        <GoalProgress totalRevenue={totalRevenue} />
+        <div className="flex-1">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Pipeline Health</h2>
+          <div className="flex gap-4">
+            {opportunityData.labels.map((stage, idx) => (
+              <div key={stage} className="flex flex-col items-center">
+                <div className="rounded-full bg-blue-100 text-blue-700 font-bold w-12 h-12 flex items-center justify-center mb-1">
+                  {opportunityData.datasets[0].data[idx] / 1000}k
+                </div>
+                <span className="text-xs text-slate-600">{stage}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* 6. Goal Tracking */}
+        <div className="flex-1">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Goal Progress</h2>
+          <p className="text-sm text-slate-600 mb-1">Q2 Revenue Goal: $2,000,000</p>
+          <div className="w-full bg-slate-200 rounded-full h-4">
+            <div className="bg-green-600 h-4 rounded-full text-right pr-2 text-white text-xs flex items-center justify-end"
+              style={{ width: `${Math.min((totalRevenue / 2000000) * 100, 100)}%` }}>
+              {Math.round((totalRevenue / 2000000) * 100)}%
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 6. Team Leaderboard */}
-      <TeamLeaderboard teamLeaderboard={teamLeaderboard} />
+      {/* 7. Team Leaderboard */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-slate-600">
+              <th className="text-left py-1">Rep</th>
+              <th className="text-left py-1">Deals</th>
+              <th className="text-left py-1">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamLeaderboard.map(rep => (
+              <tr key={rep.name} className="border-t">
+                <td className="py-1">{rep.name}</td>
+                <td className="py-1">{rep.deals}</td>
+                <td className="py-1">${rep.revenue.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {/* 7. Recent Communications */}
+      {/* 8. Recent Communications */}
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Mail size={18}/> Recent Communications</h2>
         <ul className="divide-y">
@@ -213,11 +329,24 @@ const Dashboard = () => {
         </ul>
       </div>
 
-      {/* 8. Activity Heatmap */}
-      <ActivityHeatmap />
+      {/* 9. Activity Heatmap (Demo) */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Calendar size={18}/> Activity Heatmap</h2>
+        <div className="flex gap-2">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
+            <div key={day} className="flex flex-col items-center gap-1">
+              <span className="text-xs text-slate-600">{day}</span>
+              <div className="w-8 h-8 rounded bg-green-200 flex items-center justify-center font-bold text-green-800">
+                {Math.floor(Math.random() * 10) + 1}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-slate-500 mt-1"># of logged activities per day</p>
+      </div>
 
-      {/* 9. Recent Emails (Gmail/Outlook) */}
-      <RecentEmails emails={dummyEmails} />
+      {/* 9b. Recent Emails (Gmail/Outlook) */}
+      <RecentEmails />
 
       {/* 10. Company News & Resource Center */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -239,7 +368,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 11. Chart and Task Section */}
+      {/* Existing: Chart and Task Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <OpportunityChart data={opportunityData} />
         <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -266,6 +395,114 @@ const Dashboard = () => {
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Existing: Activities and Opportunities */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <RecentActivity activities={recentActivities} />
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="border-b p-4">
+            <h2 className="text-lg font-semibold text-slate-900">Recent Opportunities</h2>
+          </div>
+          <div className="divide-y">
+            {opportunities.slice(0, 3).map(opp => (
+              <Link key={opp.id} to={`/opportunities/${opp.id}`} className="block p-4 hover:bg-slate-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{opp.name}</p>
+                    <p className="text-sm text-slate-500">{opp.accountName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">${opp.amount.toLocaleString()}</p>
+                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
+                      opp.stage === 'Proposal' ? 'bg-blue-100 text-blue-800' :
+                      opp.stage === 'Negotiation' ? 'bg-amber-100 text-amber-800' :
+                      'bg-slate-100 text-slate-800'
+                    }`}>
+                      {opp.stage}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center">
+                  <div className="w-full rounded-full bg-slate-200">
+                    <div
+                      className="rounded-full bg-primary-600 p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+                      style={{ width: `${opp.probability}%` }}
+                    >
+                      {opp.probability}%
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="border-t p-3">
+            <Link to="/opportunities" className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors">
+              View All Opportunities
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Improved High-Scoring Leads Section */}
+      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="border-b p-4">
+          <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
+        </div>
+        <div className="divide-y">
+          {highScoringLeads.length > 0 ? (
+            highScoringLeads.slice(0, 3).map(lead => (
+              <div key={lead.id} className="block p-4 hover:bg-slate-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-base">{lead.firstName} {lead.lastName}</span>
+                      {lead.salesforceUrl && (
+                        <a
+                          href={lead.salesforceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="View in Salesforce"
+                          className="inline-flex items-center"
+                        >
+                          {/* Salesforce logo SVG */}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" className="ml-1">
+                            <circle cx="16" cy="16" r="16" fill="#00A1E0"/>
+                            <text x="16" y="22" textAnchor="middle" fontSize="15" fill="#fff" fontFamily="Arial, sans-serif">SF</text>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-500">{lead.company}</p>
+                    <p className="text-sm text-slate-500">{lead.phone}</p>
+                    <p className="text-sm text-slate-500">{lead.email}</p>
+                  </div>
+                  <div className="text-right min-w-[90px]">
+                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
+                      Score: {lead.leadScore}
+                    </span>
+                    <div className="mt-2 w-full rounded-full bg-slate-200 h-2">
+                      <div
+                        className="rounded-full bg-green-600 h-2"
+                        style={{ width: `${lead.leadScore}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
+          )}
+        </div>
+        <div className="border-t p-3">
+          <Link
+            to="/leads"
+            className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
+          >
+            View All Leads
+          </Link>
         </div>
       </div>
     </div>
