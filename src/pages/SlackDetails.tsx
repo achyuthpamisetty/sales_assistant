@@ -1,53 +1,106 @@
 import React, { useEffect, useState } from "react";
-import { MessageSquare } from "lucide-react";
+import { Users, Trophy, FileText, MessageSquare } from "lucide-react";
 
-const fetchSlackMessages = async () => {
-  // Replace with real API call if needed
-  return [
-    { ts: "1715500001.000100", user: "U123", text: "Hello team! Let's sync at 3pm.", time: "Today, 10:15 AM" },
-    { ts: "1715499001.000200", user: "U234", text: "Reminder: Submit your reports.", time: "Yesterday, 4:22 PM" },
-    { ts: "1715498001.000300", user: "U345", text: "Welcome @Priya to the channel!", time: "Yesterday, 11:30 AM" },
-  ];
-};
+const dummyLeaderboard = [
+  { name: "Alice Johnson", deals: 15, revenue: 120000 },
+  { name: "Bob Smith", deals: 12, revenue: 95000 },
+  { name: "Priya Patel", deals: 10, revenue: 87000 },
+];
 
-const SlackPage = () => {
-  const [messages, setMessages] = useState([]);
+const dummyWins = [
+  { id: 1, text: "Closed $50k deal with Acme Corp", by: "Alice", when: "Today" },
+  { id: 2, text: "Demo with HealthFirst was a success", by: "Priya", when: "Yesterday" },
+];
+
+const dummyDocs = [
+  { id: 1, name: "Q2 Sales Playbook.pdf", url: "#" },
+  { id: 2, name: "Pricing Sheet.xlsx", url: "#" },
+];
+
+const dummySlack = [
+  { id: 1, user: "Alice", text: "Great job team on the Acme deal! 🎉", time: "10:15 AM" },
+  { id: 2, user: "Bob", text: "@Priya Can you share the demo slides?", time: "09:47 AM" },
+];
+
+const TeamCollaboration = () => {
   const [loading, setLoading] = useState(true);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [wins, setWins] = useState([]);
+  const [docs, setDocs] = useState([]);
+  const [slack, setSlack] = useState([]);
 
   useEffect(() => {
-    fetchSlackMessages().then((msgs) => {
-      setMessages(msgs);
+    setTimeout(() => {
+      setLeaderboard(dummyLeaderboard);
+      setWins(dummyWins);
+      setDocs(dummyDocs);
+      setSlack(dummySlack);
       setLoading(false);
-    });
+    }, 900);
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto py-8 space-y-6">
-      <h1 className="text-2xl font-bold flex items-center gap-2">
-        <MessageSquare size={24} /> Recent Slack Messages
-      </h1>
-      {loading ? (
-        <div className="text-slate-500">Loading...</div>
-      ) : (
-        <ul className="divide-y">
-          {messages.map((msg) => (
-            <li key={msg.ts} className="py-4">
-              <div>
-                <span className="font-medium">User {msg.user}</span>
-                <span className="ml-2 text-xs text-slate-500">{msg.time}</span>
-                <div className="text-slate-700">{msg.text}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm space-y-5">
+      <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+        <Users size={18} /> Team Collaboration Highlights
+      </h2>
+      {loading ? <div className="text-slate-500">Loading team data...</div> : (
+        <>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><Trophy size={16}/> Leaderboard</h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-slate-600">
+                  <th className="text-left py-1">Rep</th>
+                  <th className="text-left py-1">Deals</th>
+                  <th className="text-left py-1">Revenue</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map(rep => (
+                  <tr key={rep.name} className="border-t">
+                    <td className="py-1">{rep.name}</td>
+                    <td className="py-1">{rep.deals}</td>
+                    <td className="py-1">${rep.revenue.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><Trophy size={16}/> Recent Wins</h3>
+            <ul className="list-disc list-inside text-sm text-slate-700 space-y-1">
+              {wins.map(win => (
+                <li key={win.id}>{win.text} <span className="text-xs text-slate-500">({win.by}, {win.when})</span></li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><FileText size={16}/> Shared Documents</h3>
+            <ul className="list-disc list-inside text-sm text-slate-700 space-y-1">
+              {docs.map(doc => (
+                <li key={doc.id}>
+                  <a href={doc.url} className="text-blue-600 hover:underline">{doc.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1 flex items-center gap-1"><MessageSquare size={16}/> Recent Slack Messages</h3>
+            <ul className="space-y-2">
+              {slack.map(msg => (
+                <li key={msg.id} className="border rounded p-2 bg-slate-50">
+                  <div className="font-medium">{msg.user}</div>
+                  <div className="text-xs text-slate-600">{msg.text}</div>
+                  <div className="text-xs text-slate-400">{msg.time}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
-      <div className="mt-4 text-right">
-        <a href="https://slack.com/app" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-          View in Slack
-        </a>
-      </div>
     </div>
   );
 };
 
-export default SlackPage;
+export default TeamCollaboration;
