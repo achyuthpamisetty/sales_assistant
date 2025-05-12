@@ -311,26 +311,6 @@ const Dashboard = () => {
       {/* 9b. Recent Emails (Gmail/Outlook) */}
       <RecentEmails />
 
-      {/* 10. Company News & Resource Center */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Company News</h2>
-          <ul className="list-disc list-inside text-sm text-slate-700">
-            {companyNews.map((news, idx) => (
-              <li key={idx}><a href={news.url} className="text-blue-600 hover:underline">{news.headline}</a></li>
-            ))}
-          </ul>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
-          <ul className="list-disc list-inside text-sm text-slate-700">
-            {helpLinks.map((hl, idx) => (
-              <li key={idx}><a href={hl.url} className="text-blue-600 hover:underline">{hl.label}</a></li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
       {/* Existing: Chart and Task Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <OpportunityChart data={opportunityData} />
@@ -488,6 +468,25 @@ const Dashboard = () => {
             ))}
           </tbody>
         </table>
+      </div>
+          {/* 10. Company News & Resource Center */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="mb-3 text-lg font-semibold text-slate-900">Company News</h2>
+          <ul className="list-disc list-inside text-sm text-slate-700">
+            {companyNews.map((news, idx) => (
+              <li key={idx}><a href={news.url} className="text-blue-600 hover:underline">{news.headline}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
+          <ul className="list-disc list-inside text-sm text-slate-700">
+            {helpLinks.map((hl, idx) => (
+              <li key={idx}><a href={hl.url} className="text-blue-600 hover:underline">{hl.label}</a></li>
+            ))}
+          </ul>
+        </div>
       </div>
         </div>
       </div>
