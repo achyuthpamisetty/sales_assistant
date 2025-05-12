@@ -1,5 +1,15 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Zap, Mail, MessageSquare, Phone, Calendar, Cloud, Video } from 'lucide-react';
+import {
+  CheckCircle2,
+  XCircle,
+  Zap,
+  Mail,
+  MessageSquare,
+  Phone,
+  Calendar,
+  Cloud,
+  Video,
+} from 'lucide-react';
 
 const integrations = [
   {
@@ -53,4 +63,90 @@ const integrations = [
   },
 ];
 
-// Rest of the component remains the same...
+const Integrations = () => {
+  return (
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">App Integrations</h1>
+          <p className="text-slate-600 mb-4">
+            Connect the tools your sales team already uses to streamline your workflow.
+          </p>
+        </div>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+          Add New Integration
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {integrations.map((integration) => (
+          <div
+            key={integration.id}
+            className="flex flex-col justify-between border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition"
+          >
+            <div>
+              <div className="flex items-center space-x-3 mb-3">
+                {integration.icon}
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">{integration.name}</h2>
+                  <p className="text-sm text-slate-500">{integration.description}</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex justify-between items-center">
+              <span
+                className={`inline-flex items-center text-xs font-semibold px-2 py-1 rounded-full ${
+                  integration.connected
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
+              >
+                {integration.connected ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    Connected
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="w-4 h-4 mr-1" />
+                    Not Connected
+                  </>
+                )}
+              </span>
+              <button
+                className={`text-sm font-medium px-3 py-1.5 rounded-md transition ${
+                  integration.connected
+                    ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+              >
+                {integration.connected ? 'Manage' : 'Connect'}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Tips Section */}
+      <div className="mt-8 bg-slate-50 rounded-lg p-6 border border-slate-200">
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">Quick Tips</h2>
+        <ul className="space-y-2 text-slate-600">
+          <li className="flex items-center">
+            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+            Connect your most-used apps to automate data sync
+          </li>
+          <li className="flex items-center">
+            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+            Enable Salesforce integration for comprehensive CRM data
+          </li>
+          <li className="flex items-center">
+            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+            Use calendar integrations to streamline meeting scheduling
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Integrations;
