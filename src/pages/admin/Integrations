@@ -1,5 +1,15 @@
 import React from 'react';
-import { CheckCircle, XCircle, Zap, Mail, MessageSquare, PhoneCall, Calendar, Cloud } from 'lucide-react';
+import {
+  CheckCircle,
+  XCircle,
+  Zap,
+  Mail,
+  MessageSquare,
+  PhoneCall,
+  Calendar,
+  Cloud,
+  Video // ✅ Added missing import
+} from 'lucide-react';
 
 const integrations = [
   {
