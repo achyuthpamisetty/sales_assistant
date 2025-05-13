@@ -46,7 +46,7 @@ const mockOpportunities = [
   {
     id: '6',
     name: 'BluePeak Partners',
-    stage: 'Discovery',
+    stage: 'Qualification',
     amount: 7800,
     closeDate: '2025-06-25',
     probability: 28,
