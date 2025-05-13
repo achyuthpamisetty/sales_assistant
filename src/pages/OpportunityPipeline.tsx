@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSalesforce } from '../context/SalesforceContext';
-import { Briefcase, Calendar, User, Plus } from 'lucide-react';
+import { Briefcase, DollarSign, Calendar, User, Tag, Plus } from 'lucide-react';
 
 const STAGES = [
   { key: 'Discovery', color: 'bg-blue-100', text: 'text-blue-800' },
@@ -11,7 +11,62 @@ const STAGES = [
   { key: 'Closed Lost', color: 'bg-red-100', text: 'text-red-800' },
 ];
 
-// Your existing mockOpportunities here...
+const mockOpportunities = [
+  { id: '1', name: 'Acme Corp', stage: 'Discovery', amount: 20000, probability: 20, closeDate: '2025-06-01', contactName: 'John Doe' },
+  {
+    id: '2',
+    name: 'Beta Inc',
+    stage: 'Discovery',
+    amount: 8500,
+    closeDate: '2025-06-05',
+    probability: 25,
+    contactName: 'Bob Smith',
+  },
+  {
+    id: '3',
+    name: 'Omega LLC',
+    stage: 'Discovery',
+    amount: 4200,
+    closeDate: '2025-06-10',
+    probability: 30,
+    contactName: 'Charlie Brown',
+  },
+  {
+    id: '4',
+    name: 'Cloud Nine Co.',
+    stage: 'Discovery',
+    amount: 7300,
+    closeDate: '2025-06-12',
+    probability: 22,
+    contactName: 'Diana Prince',
+  },
+  { id: '2', name: 'Skyline Solutions', stage: 'Discovery', amount: 18000, probability: 15, closeDate: '2025-06-03', contactName: 'Emily Clark' },
+  { id: '3', name: 'Vertex Global', stage: 'Discovery', amount: 25000, probability: 30, closeDate: '2025-06-07', contactName: 'Raj Singh' },
+  { id: '4', name: 'Beta Ltd', stage: 'Qualification', amount: 30000, probability: 40, closeDate: '2025-06-10', contactName: 'Jane Smith' },
+  {
+    id: '6',
+    name: 'BluePeak Partners',
+    stage: 'Qualification',
+    amount: 7800,
+    closeDate: '2025-06-25',
+    probability: 28,
+    contactName: 'Felicity Smoak',
+  },
+  { id: '5', name: 'Quantum AI', stage: 'Qualification', amount: 22000, probability: 35, closeDate: '2025-06-12', contactName: 'Oscar Liu' },
+  { id: '6', name: 'NextPhase', stage: 'Qualification', amount: 28000, probability: 38, closeDate: '2025-06-13', contactName: 'Priya Das' },
+  { id: '7', name: 'Delta Inc', stage: 'Proposal', amount: 50000, probability: 60, closeDate: '2025-06-20', contactName: 'Mark Lee' },
+  { id: '8', name: 'InnovateX', stage: 'Proposal', amount: 48000, probability: 58, closeDate: '2025-06-21', contactName: 'Sara Khan' },
+  { id: '9', name: 'Tera Systems', stage: 'Proposal', amount: 46000, probability: 55, closeDate: '2025-06-22', contactName: 'Luis Gomez' },
+  { id: '10', name: 'Omega LLC', stage: 'Negotiation', amount: 75000, probability: 80, closeDate: '2025-06-30', contactName: 'Lisa Ray' },
+  { id: '11', name: 'Alpha Dynamics', stage: 'Negotiation', amount: 72000, probability: 78, closeDate: '2025-07-02', contactName: 'Ben Carter' },
+  { id: '12', name: 'CoreTech', stage: 'Negotiation', amount: 69000, probability: 75, closeDate: '2025-07-03', contactName: 'Maya Fernandez' },
+  { id: '13', name: 'Zeta Partners', stage: 'Closed Won', amount: 100000, probability: 100, closeDate: '2025-05-01', contactName: 'Tom Allen' },
+  { id: '14', name: 'BrightWave', stage: 'Closed Won', amount: 95000, probability: 100, closeDate: '2025-04-25', contactName: 'Nina Patel' },
+  { id: '15', name: 'EcoSync', stage: 'Closed Won', amount: 88000, probability: 100, closeDate: '2025-05-10', contactName: 'Arjun Mehta' },
+  { id: '16', name: 'Nova Ventures', stage: 'Closed Won', amount: 25000, probability: 100, closeDate: '2025-04-15', contactName: 'Karen Yu' },
+  { id: '17', name: 'GridNet', stage: 'Closed Lost', amount: 31000, probability: 0, closeDate: '2025-04-20', contactName: 'Satoshi Ito' },
+  { id: '18', name: 'BlueOrbit', stage: 'Closed Lost', amount: 28000, probability: 0, closeDate: '2025-04-28', contactName: 'Mila Novak' },
+];
 
 const OpportunityPipeline = () => {
   const opportunities = mockOpportunities;
@@ -77,22 +132,8 @@ const OpportunityPipeline = () => {
                 {grouped[stage.key]?.map(opp => (
                   <div
                     key={opp.id}
-                    className="relative group rounded-lg border border-slate-200 bg-slate-50 p-2 hover:bg-slate-100 transition cursor-pointer"
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-2 hover:bg-slate-100 transition cursor-pointer"
                   >
-                    {/* Top Right Alert */}
-                    <div className="absolute top-2 right-2 group relative">
-                      <div className="h-4 w-4 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-[10px] font-bold">
-                        !
-                      </div>
-                      <div className="absolute top-5 right-0 w-44 bg-white border border-slate-200 rounded shadow-md p-2 text-xs text-slate-700 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-200 z-10">
-                        <div className="font-semibold mb-1">No open activities</div>
-                        <div className="flex flex-col gap-1">
-                          <button className="text-primary-600 hover:underline text-left">New Task</button>
-                          <button className="text-primary-600 hover:underline text-left">New Event</button>
-                        </div>
-                      </div>
-                    </div>
-
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-1">
                         <Briefcase className="h-4 w-4 text-slate-400" />
