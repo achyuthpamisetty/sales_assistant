@@ -13,6 +13,15 @@ const STAGES = [
 
 const mockOpportunities = [
   { id: '1', name: 'Acme Corp', stage: 'Discovery', amount: 20000, probability: 20, closeDate: '2025-06-01', contactName: 'John Doe' },
+  {
+    id: '2',
+    name: 'Beta Inc',
+    stage: 'Discovery',
+    amount: 8500,
+    closeDate: '2025-06-05',
+    probability: 25,
+    contactName: 'Bob Smith',
+  },
   { id: '2', name: 'Skyline Solutions', stage: 'Discovery', amount: 18000, probability: 15, closeDate: '2025-06-03', contactName: 'Emily Clark' },
   { id: '3', name: 'Vertex Global', stage: 'Discovery', amount: 25000, probability: 30, closeDate: '2025-06-07', contactName: 'Raj Singh' },
   { id: '4', name: 'Beta Ltd', stage: 'Qualification', amount: 30000, probability: 40, closeDate: '2025-06-10', contactName: 'Jane Smith' },
