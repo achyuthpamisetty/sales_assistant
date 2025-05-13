@@ -14,7 +14,6 @@ const STAGES = [
 const OpportunityPipeline = () => {
   const { opportunities, loading } = useSalesforce();
 
-  // Group opportunities by stage
   const grouped = STAGES.reduce((acc, stage) => {
     acc[stage.key] = opportunities.filter(opp => opp.stage === stage.key);
     return acc;
@@ -23,7 +22,7 @@ const OpportunityPipeline = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -33,66 +32,59 @@ const OpportunityPipeline = () => {
   const winRate = (opportunities.filter(opp => opp.stage === 'Closed Won').length / opportunities.length * 100) || 0;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 p-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Pipeline Overview</h1>
-          <p className="text-slate-500">Track and manage your sales pipeline stages</p>
+          <h1 className="text-xl font-semibold text-slate-900">Pipeline Overview</h1>
+          <p className="text-sm text-slate-500">Manage opportunities by sales stage</p>
         </div>
-        <button className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Opportunity
+        <button className="inline-flex items-center rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700">
+          <Plus className="mr-1 h-4 w-4" />
+          Add
         </button>
       </div>
 
-      {/* Pipeline Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="text-sm font-medium text-slate-500">Total Pipeline Value</h3>
-          <p className="text-2xl font-bold text-slate-900">${totalValue.toLocaleString()}</p>
+      {/* Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-white rounded-md shadow p-3 text-sm">
+          <div className="text-slate-500">Total Pipeline Value</div>
+          <div className="text-lg font-bold text-slate-800">${totalValue.toLocaleString()}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="text-sm font-medium text-slate-500">Average Deal Size</h3>
-          <p className="text-2xl font-bold text-slate-900">${avgDealSize.toLocaleString()}</p>
+        <div className="bg-white rounded-md shadow p-3 text-sm">
+          <div className="text-slate-500">Avg. Deal Size</div>
+          <div className="text-lg font-bold text-slate-800">${avgDealSize.toLocaleString()}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="text-sm font-medium text-slate-500">Win Rate</h3>
-          <p className="text-2xl font-bold text-slate-900">{winRate.toFixed(1)}%</p>
+        <div className="bg-white rounded-md shadow p-3 text-sm">
+          <div className="text-slate-500">Win Rate</div>
+          <div className="text-lg font-bold text-slate-800">{winRate.toFixed(1)}%</div>
         </div>
       </div>
 
-      {/* Pipeline Stages */}
-      <div className="overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-[1200px]">
+      {/* Pipeline */}
+      <div className="overflow-x-auto">
+        <div className="flex gap-3 min-w-[1000px]">
           {STAGES.map(stage => (
             <div
               key={stage.key}
-              className="flex-1 min-w-[300px] bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col"
+              className="w-[240px] bg-white rounded-lg border shadow-sm flex flex-col"
             >
-              <div className={`flex items-center justify-between px-4 py-3 border-b ${stage.color}`}>
-                <span className={`font-semibold ${stage.text}`}>{stage.key}</span>
-                <span className={`text-xs ${stage.text}`}>
-                  {grouped[stage.key]?.length || 0} Opportunities
-                </span>
+              <div className={`px-3 py-2 border-b text-sm font-semibold ${stage.color} ${stage.text}`}>
+                {stage.key} <span className="float-right text-xs font-normal">{grouped[stage.key]?.length || 0}</span>
               </div>
-              
-              <div className="p-2 flex-1 overflow-y-auto space-y-2">
+
+              <div className="p-2 space-y-2 overflow-y-auto max-h-[400px]">
                 {grouped[stage.key]?.map(opp => (
                   <div
                     key={opp.id}
-                    className="rounded-lg border border-slate-200 bg-slate-50 p-3 hover:bg-slate-100 transition cursor-pointer"
+                    className="rounded-md border bg-slate-50 p-2 hover:bg-slate-100 cursor-pointer"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="h-4 w-4 text-slate-400" />
-                        <span className="font-medium text-slate-900">{opp.name}</span>
-                      </div>
-                      <span className="text-sm font-medium text-primary-600">
-                        ${opp.amount.toLocaleString()}
-                      </span>
+                    <div className="flex justify-between items-center text-sm font-medium text-slate-800">
+                      <span className="truncate">{opp.name}</span>
+                      <span className="text-primary-600 text-xs">${opp.amount.toLocaleString()}</span>
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-500">
+
+                    <div className="text-xs text-slate-500 mt-1 space-y-1">
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         <span>{opp.closeDate}</span>
@@ -110,24 +102,21 @@ const OpportunityPipeline = () => {
                           style={{ width: `${opp.probability}%` }}
                         />
                       </div>
-                      <div className="mt-1 text-xs text-right text-slate-500">
-                        {opp.probability}% Probability
+                      <div className="text-right text-xs text-slate-400 mt-0.5">
+                        {opp.probability}%
                       </div>
                     </div>
                   </div>
                 ))}
 
                 {(!grouped[stage.key] || grouped[stage.key].length === 0) && (
-                  <div className="text-center py-4 text-sm text-slate-500">
-                    No opportunities in this stage
-                  </div>
+                  <div className="text-center text-xs text-slate-400 py-4">No opportunities</div>
                 )}
               </div>
 
-              <button
-                className="flex items-center justify-center gap-1 text-xs text-primary-600 border-t border-slate-200 py-2 hover:bg-slate-100 transition"
-              >
-                <Plus size={14} /> Add Opportunity
+              <button className="text-xs text-primary-600 border-t border-slate-200 py-2 hover:bg-slate-50">
+                <Plus size={12} className="inline-block mr-1" />
+                Add
               </button>
             </div>
           ))}
