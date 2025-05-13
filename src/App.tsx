@@ -3,6 +3,11 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import { SalesforceProvider } from './context/SalesforceContext';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+
+// Auth pages
+const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
 
 // Lazy loaded pages
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -21,27 +26,158 @@ const Permissions = lazy(() => import('./pages/admin/Permissions'));
 
 function App() {
   return (
-    <SalesforceProvider>
-      <Layout>
+    <AuthProvider>
+      <SalesforceProvider>
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/leads" element={<Leads />} />
-            <Route path="/leads/:id" element={<LeadDetail />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/accounts/:id" element={<AccountDetail />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/contacts/:id" element={<ContactDetail />} />
-            <Route path="/opportunities" element={<Opportunities />} />
-            <Route path="/opportunities/:id" element={<OpportunityDetail />} />
-            <Route path="/pipeline" element={<OpportunityPipeline />} />
-            <Route path="/email-composer" element={<EmailComposer />} />
-            <Route path="/admin/users" element={<UserManagement />} />
-            <Route path="/admin/permissions" element={<Permissions />} />
+            <Route path="/auth" element={<AuthPage />} />
+            
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/leads"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Leads />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/leads/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <LeadDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/accounts"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Accounts />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/accounts/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AccountDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/contacts"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Contacts />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/contacts/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ContactDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/opportunities"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Opportunities />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/opportunities/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <OpportunityDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/pipeline"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <OpportunityPipeline />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/email-composer"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <EmailComposer />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <UserManagement />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/permissions"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Permissions />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Suspense>
-      </Layout>
-    </SalesforceProvider>
+      </SalesforceProvider>
+    </AuthProvider>
   );
 }
 
