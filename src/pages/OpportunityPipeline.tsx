@@ -63,7 +63,7 @@ const mockOpportunities = [
   { id: '13', name: 'Zeta Partners', stage: 'Closed Won', amount: 100000, probability: 100, closeDate: '2025-05-01', contactName: 'Tom Allen' },
   { id: '14', name: 'BrightWave', stage: 'Closed Won', amount: 95000, probability: 100, closeDate: '2025-04-25', contactName: 'Nina Patel' },
   { id: '15', name: 'EcoSync', stage: 'Closed Won', amount: 88000, probability: 100, closeDate: '2025-05-10', contactName: 'Arjun Mehta' },
-  { id: '16', name: 'Nova Ventures', stage: 'Closed Lost', amount: 25000, probability: 0, closeDate: '2025-04-15', contactName: 'Karen Yu' },
+  { id: '16', name: 'Nova Ventures', stage: 'Closed Won', amount: 25000, probability: 0, closeDate: '2025-04-15', contactName: 'Karen Yu' },
   { id: '17', name: 'GridNet', stage: 'Closed Lost', amount: 31000, probability: 0, closeDate: '2025-04-20', contactName: 'Satoshi Ito' },
   { id: '18', name: 'BlueOrbit', stage: 'Closed Lost', amount: 28000, probability: 0, closeDate: '2025-04-28', contactName: 'Mila Novak' },
 ];
