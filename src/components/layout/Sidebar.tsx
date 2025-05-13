@@ -14,7 +14,8 @@ import {
   Headphones,
   Shield,
   UserPlus,
-  Plug 
+  Plug,
+  GitBranch
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -35,6 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { name: 'Accounts', href: '/accounts', icon: Briefcase },
     { name: 'Contacts', href: '/contacts', icon: PhoneCall },
     { name: 'Opportunities', href: '/opportunities', icon: TrendingUp },
+    { name: 'Pipeline', href: '/pipeline', icon: GitBranch },
     { name: 'Email Composer', href: '/email-composer', icon: Mail },
     { name: 'Analytics', href: '/analytics', icon: BarChart2 },
     { name: 'Calendar', href: '/calendar', icon: Calendar },

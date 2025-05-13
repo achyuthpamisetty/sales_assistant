@@ -14,6 +14,7 @@ const Contacts = lazy(() => import('./pages/Contacts'));
 const ContactDetail = lazy(() => import('./pages/ContactDetail'));
 const Opportunities = lazy(() => import('./pages/Opportunities'));
 const OpportunityDetail = lazy(() => import('./pages/OpportunityDetail'));
+const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
@@ -33,6 +34,7 @@ function App() {
             <Route path="/contacts/:id" element={<ContactDetail />} />
             <Route path="/opportunities" element={<Opportunities />} />
             <Route path="/opportunities/:id" element={<OpportunityDetail />} />
+            <Route path="/pipeline" element={<OpportunityPipeline />} />
             <Route path="/email-composer" element={<EmailComposer />} />
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/permissions" element={<Permissions />} />
