@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Headphones, Mail, Lock, User, Building } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -14,21 +16,23 @@ const AuthPage = () => {
     company: '',
   });
 
+  useEffect(() => {
+    // If already authenticated, redirect to dashboard
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Here you would typically make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
-      
-      // Store auth token or user data in localStorage/context
-      localStorage.setItem('isAuthenticated', 'true');
-      
-      // Redirect to dashboard
-      navigate('/');
+      await login(formData.email, formData.password);
+      // The redirect will be handled by the useEffect above
     } catch (error) {
       console.error('Authentication error:', error);
+      // Here you could add error handling UI
     } finally {
       setLoading(false);
     }
