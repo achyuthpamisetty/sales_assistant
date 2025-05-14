@@ -7,10 +7,8 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import SlackIntegration from './pages/admin/SlackIntegration';
 
-// Auth pages
-const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
-
 // Lazy loaded pages
+const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Leads = lazy(() => import('./pages/Leads'));
 const LeadDetail = lazy(() => import('./pages/LeadDetail'));
@@ -24,6 +22,7 @@ const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
+const Integrations = lazy(() => import('./pages/admin/Integrations')); // Ensure Integrations is imported
 
 function App() {
   return (
@@ -32,7 +31,7 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
-            
+
             <Route
               path="/"
               element={
@@ -43,7 +42,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/leads"
               element={
@@ -166,26 +165,27 @@ function App() {
             />
 
             <Route
-  path="/admin/slack"
-  element={
-    <ProtectedRoute>
-      <Layout>
-        <SlackIntegration />
-      </Layout>
-    </ProtectedRoute>
-  }
-/>
+              path="/admin/slack"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SlackIntegration />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
             <Route
-  path="/admin/integrations"
-  element={
-    <ProtectedRoute>
-      <Layout>
-        <Integrations />
-      </Layout>
-    </ProtectedRoute>
-  }
-/>
+              path="/admin/integrations"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Integrations />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/admin/permissions"
               element={
