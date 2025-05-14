@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import salesforceLogo from '@/assets/salesforce-logo.png'; // Adjust path to your actual static asset
 
 const Integrations = () => {
   const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | ''>('');
@@ -15,15 +14,8 @@ const Integrations = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-        {/* Salesforce Logo */}
-        <img
-          src={salesforceLogo}
-          alt="Salesforce"
-          className="mx-auto w-24 h-24 mb-4"
-        />
-
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Connect to Salesforce
+          Salesforce Integration
         </h2>
 
         <select
