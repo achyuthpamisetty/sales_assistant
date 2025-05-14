@@ -176,7 +176,7 @@ function App() {
             />
 
             <Route
-              path="/admin/integrations"
+              path="/admin/Integrations"
               element={
                 <ProtectedRoute>
                   <Layout>
