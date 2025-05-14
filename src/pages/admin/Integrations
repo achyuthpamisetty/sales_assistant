@@ -10,6 +10,7 @@ import {
   Cloud,
   Video, // Ensure this icon is available in your version of lucide-react
 } from 'lucide-react';
+
 const integrations = [
   {
     id: '1',
@@ -61,10 +62,10 @@ const integrations = [
     connected: false,
   },
 ];
+
 const Integrations = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">App Integrations</h1>
       <p className="text-slate-600 mb-4">
         Connect the tools your sales team already uses to streamline your workflow.
       </p>
@@ -117,4 +118,5 @@ const Integrations = () => {
     </div>
   );
 };
+
 export default Integrations;
