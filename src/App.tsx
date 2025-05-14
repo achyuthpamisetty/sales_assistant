@@ -8,10 +8,6 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Auth pages
 const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
-const HomePage = lazy(() => import('./pages/HomePage'));
-const ProductsPage = lazy(() => import('./pages/ProductsPage'));
-const ProductDetail = lazy(() => import('./pages/ProductDetail'));
-const ContactForm = lazy(() => import('./pages/ContactForm'));
 
 // Lazy loaded pages
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -35,13 +31,9 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/contact" element={<ContactForm />} />
             
             <Route
-              path="/dashboard"
+              path="/"
               element={
                 <ProtectedRoute>
                   <Layout>
