@@ -8,7 +8,7 @@ import {
   PhoneCall,
   Calendar,
   Cloud,
-  Video // ✅ Added missing import
+  Video, // Ensure this icon is available in your version of lucide-react
 } from 'lucide-react';
 
 const integrations = [
@@ -67,7 +67,9 @@ const Integrations = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold text-slate-900">App Integrations</h1>
-      <p className="text-slate-600 mb-4">Connect the tools your sales team already uses to streamline your workflow.</p>
+      <p className="text-slate-600 mb-4">
+        Connect the tools your sales team already uses to streamline your workflow.
+      </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {integrations.map((integration) => (
@@ -85,7 +87,9 @@ const Integrations = () => {
             <div className="mt-4 flex justify-between items-center">
               <span
                 className={`inline-flex items-center text-xs font-semibold px-2 py-1 rounded-full ${
-                  integration.connected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  integration.connected
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
                 }`}
               >
                 {integration.connected ? (
