@@ -53,9 +53,9 @@ const Integrations = () => {
       {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white p-4">
         <h1 className="text-xl font-bold mb-4">Integrations</h1>
-        
+
         {/* Logos with Connect buttons */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('salesforce')}>
             <img src={salesforceLogo} alt="Salesforce" className="mx-auto w-24 h-24 mb-4" />
             <p className="text-sm font-semibold">Salesforce</p>
