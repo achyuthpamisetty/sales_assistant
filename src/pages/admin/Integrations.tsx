@@ -55,7 +55,7 @@ const Integrations = () => {
         <h1 className="text-xl font-bold mb-4">Integrations</h1>
 
         {/* Logos with Connect buttons */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('salesforce')}>
             <img src={salesforceLogo} alt="Salesforce" className="mx-auto w-24 h-24 mb-4" />
             <p className="text-sm font-semibold">Salesforce</p>
