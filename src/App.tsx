@@ -176,7 +176,16 @@ function App() {
   }
 />
 
-            
+            <Route
+  path="/admin/integrations"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <Integrations />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
             <Route
               path="/admin/permissions"
               element={
