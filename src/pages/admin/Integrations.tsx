@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const Integrations = () => {
-  const [connectionType, setConnectionType] = useState(null);
-  const [salesforceEnv, setSalesforceEnv] = useState(null);
+  const [connectionType, setConnectionType] = useState<string | null>(null);
+  const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | null>(null);
 
   const handleConnect = () => {
     if (salesforceEnv) {
@@ -13,11 +13,11 @@ const Integrations = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       {/* Left Sidebar */}
       <div className="w-64 bg-gray-800 text-white p-4">
-        <h1 className="text-xl font-bold">Integrations</h1>
-        <nav className="mt-6">
+        <h1 className="text-xl font-bold mb-4">Integrations</h1>
+        <nav>
           <ul>
             <li>
               <button
@@ -29,17 +29,16 @@ const Integrations = () => {
                 Connect to Salesforce
               </button>
             </li>
-            {/* You can add more integration options here */}
           </ul>
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
-        {connectionType === 'salesforce' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Salesforce Integration</h2>
-            <p className="text-sm text-slate-600">
+      <div className="flex-1 p-6 bg-gray-100">
+        {connectionType === 'salesforce' ? (
+          <div className="max-w-md space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Salesforce Integration</h2>
+            <p className="text-sm text-gray-600">
               Select your Salesforce environment for integration.
             </p>
 
@@ -66,11 +65,13 @@ const Integrations = () => {
             {/* Connect Button */}
             <button
               onClick={handleConnect}
-              className="mt-6 w-full py-2 px-4 rounded-lg bg-green-600 text-white font-semibold"
+              className="w-full py-2 px-4 rounded-lg bg-green-600 text-white font-semibold"
             >
               Connect to {salesforceEnv ? salesforceEnv : 'Salesforce'}
             </button>
           </div>
+        ) : (
+          <p className="text-gray-500">Select an integration option from the left.</p>
         )}
       </div>
     </div>
