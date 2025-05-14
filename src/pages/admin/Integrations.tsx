@@ -50,9 +50,9 @@ const Integrations = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white p-4">
-        <h1 className="text-xl font-bold mb-4">Integrations</h1>
+      {/* Main Content */}
+      <div className="flex-1 p-6 bg-gray-100">
+        <h1 className="text-3xl font-bold mb-6">Integrations</h1>
 
         {/* Logos with Connect buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
@@ -96,12 +96,9 @@ const Integrations = () => {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100">
         {selectedIntegration ? (
-          <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+          <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-8">
             <h2 className="text-2xl font-bold mb-4">
               {`Connect to ${selectedIntegration.charAt(0).toUpperCase() + selectedIntegration.slice(1)}`}
             </h2>
@@ -116,7 +113,7 @@ const Integrations = () => {
             </button>
           </div>
         ) : (
-          <p className="text-center text-gray-500 text-lg">Select an integration from the sidebar.</p>
+          <p className="text-center text-gray-500 text-lg mt-6">Select an integration from the options above.</p>
         )}
       </div>
     </div>
