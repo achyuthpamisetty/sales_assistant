@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 
+// Add your logo imports here
+import salesforceLogo from '@/images/salesforce-logo.png';
+import googleCalendarLogo from '@/images/google-calendar-logo.png';
+import gmailLogo from '@/images/gmail-logo.png';
+import outreachLogo from '@/images/outreach-logo.png';
+import zoominfoLogo from '@/images/zoominfo-logo.png';
+
 const Integrations = () => {
   const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null);
   const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | ''>('');
-  
+
   const handleConnect = () => {
     if (selectedIntegration === 'salesforce' && salesforceEnv) {
       alert(`Connecting to Salesforce ${salesforceEnv}`);
@@ -14,53 +21,81 @@ const Integrations = () => {
     }
   };
 
+  const renderConnectionOptions = () => {
+    switch (selectedIntegration) {
+      case 'salesforce':
+        return (
+          <div>
+            <p className="text-gray-600 mb-4">Select the environment you want to connect to:</p>
+            <select
+              value={salesforceEnv}
+              onChange={(e) => setSalesforceEnv(e.target.value as 'sandbox' | 'production')}
+              className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Environment</option>
+              <option value="sandbox">Sandbox</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
+        );
+      case 'google-calendar':
+      case 'gmail':
+      case 'outreach':
+      case 'zoominfo':
+        return <p>Connecting to {selectedIntegration.charAt(0).toUpperCase() + selectedIntegration.slice(1)}</p>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white p-4">
         <h1 className="text-xl font-bold mb-4">Integrations</h1>
-        <ul>
-          <li>
-            <button
-              onClick={() => setSelectedIntegration('salesforce')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${selectedIntegration === 'salesforce' ? 'bg-blue-600' : 'bg-gray-700'}`}
-            >
-              Salesforce
+        
+        {/* Logos with Connect buttons */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('salesforce')}>
+            <img src={salesforceLogo} alt="Salesforce" className="mx-auto w-24 h-24 mb-4" />
+            <p className="text-sm font-semibold">Salesforce</p>
+            <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
+              Connect
             </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedIntegration('google-calendar')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${selectedIntegration === 'google-calendar' ? 'bg-blue-600' : 'bg-gray-700'}`}
-            >
-              Google Calendar
+          </div>
+
+          <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('google-calendar')}>
+            <img src={googleCalendarLogo} alt="Google Calendar" className="mx-auto w-24 h-24 mb-4" />
+            <p className="text-sm font-semibold">Google Calendar</p>
+            <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
+              Connect
             </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedIntegration('gmail')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${selectedIntegration === 'gmail' ? 'bg-blue-600' : 'bg-gray-700'}`}
-            >
-              Gmail
+          </div>
+
+          <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('gmail')}>
+            <img src={gmailLogo} alt="Gmail" className="mx-auto w-24 h-24 mb-4" />
+            <p className="text-sm font-semibold">Gmail</p>
+            <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
+              Connect
             </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedIntegration('outreach')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${selectedIntegration === 'outreach' ? 'bg-blue-600' : 'bg-gray-700'}`}
-            >
-              Outreach
+          </div>
+
+          <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('outreach')}>
+            <img src={outreachLogo} alt="Outreach" className="mx-auto w-24 h-24 mb-4" />
+            <p className="text-sm font-semibold">Outreach</p>
+            <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
+              Connect
             </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedIntegration('zoominfo')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${selectedIntegration === 'zoominfo' ? 'bg-blue-600' : 'bg-gray-700'}`}
-            >
-              Zoominfo
+          </div>
+
+          <div className="text-center cursor-pointer" onClick={() => setSelectedIntegration('zoominfo')}>
+            <img src={zoominfoLogo} alt="Zoominfo" className="mx-auto w-24 h-24 mb-4" />
+            <p className="text-sm font-semibold">Zoominfo</p>
+            <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
+              Connect
             </button>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -71,20 +106,7 @@ const Integrations = () => {
               {`Connect to ${selectedIntegration.charAt(0).toUpperCase() + selectedIntegration.slice(1)}`}
             </h2>
 
-            {selectedIntegration === 'salesforce' && (
-              <div>
-                <p className="text-gray-600 mb-4">Select the environment you want to connect to:</p>
-                <select
-                  value={salesforceEnv}
-                  onChange={(e) => setSalesforceEnv(e.target.value as 'sandbox' | 'production')}
-                  className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Environment</option>
-                  <option value="sandbox">Sandbox</option>
-                  <option value="production">Production</option>
-                </select>
-              </div>
-            )}
+            {renderConnectionOptions()}
 
             <button
               onClick={handleConnect}
