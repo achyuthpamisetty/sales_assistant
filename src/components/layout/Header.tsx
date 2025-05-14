@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext'; // Adjust path if needed
+import { useAuth } from "../../contexts/AuthContext";
 
 interface HeaderProps {
   children?: React.ReactNode;
