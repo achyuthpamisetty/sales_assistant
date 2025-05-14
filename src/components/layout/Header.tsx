@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut, Menu } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -9,6 +10,13 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/auth');
+  };
 
   return (
     <header className="z-10 flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm md:px-6">
@@ -88,7 +96,10 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </button>
-                <button className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors">
+                <button 
+                  onClick={handleLogout}
+                  className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors"
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
                 </button>
