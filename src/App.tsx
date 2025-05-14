@@ -174,7 +174,7 @@ function App() {
                   </Layout>
                 </ProtectedRoute>
               }
-              />
+            />
             
             <Route
               path="/admin/permissions"
