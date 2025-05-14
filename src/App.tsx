@@ -164,6 +164,17 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route 
+              path="/admin/slack" 
+              element=
+              <ProtectedRoute>
+                  <Layout>
+                    <SlackIntegration />
+                  </Layout>
+                </ProtectedRoute>
+              }
+              />
             
             <Route
               path="/admin/permissions"
