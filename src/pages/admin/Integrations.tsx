@@ -87,9 +87,13 @@ const Integrations = () => {
             >
               <img src={logo} alt={label} className="mx-auto w-24 h-24 mb-4" />
               <p className="text-sm font-semibold">{label}</p>
-              <button className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2">
-                Connect
-              </button>
+              <button
+  className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 mt-2"
+  onClick={() => window.location.href = '/api/salesforce/auth'}
+>
+  Connect
+</button>
+
             </div>
           ))}
         </div>
