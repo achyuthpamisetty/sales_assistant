@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
-import { Salesforce } from 'lucide-react';  // Assuming you are using Lucide icons
+import { Salesforce, CheckCircle, XCircle, Zap, Mail, MessageSquare, PhoneCall, Calendar, Cloud, Video } from 'lucide-react';
+
+const integrations = [
+  { id: '1', name: 'Slack', description: 'Instant team communication and deal updates.', icon: <MessageSquare className="h-6 w-6 text-indigo-600" />, connected: true },
+  { id: '2', name: 'Gmail', description: 'Email tracking, sync and contact management.', icon: <Mail className="h-6 w-6 text-red-600" />, connected: true },
+  { id: '3', name: 'Zoom', description: 'Schedule and manage sales meetings easily.', icon: <Video className="h-6 w-6 text-blue-600" />, connected: false },
+  { id: '4', name: 'HubSpot', description: 'Sync contacts and log activities.', icon: <Zap className="h-6 w-6 text-orange-500" />, connected: false },
+  { id: '5', name: 'Salesforce', description: 'CRM data sync with full opportunity tracking.', icon: <Cloud className="h-6 w-6 text-blue-700" />, connected: true },
+  { id: '6', name: 'Calendly', description: 'Share availability and schedule demos.', icon: <Calendar className="h-6 w-6 text-emerald-600" />, connected: true },
+  { id: '7', name: 'Twilio', description: 'Automated calls and SMS for outbound engagement.', icon: <PhoneCall className="h-6 w-6 text-purple-600" />, connected: false },
+];
 
 const Integrations = () => {
-  const [isConnected, setIsConnected] = useState(false); // Track connection state
+  const [isConnected, setIsConnected] = useState(false);
   const [connectionType, setConnectionType] = useState<'Production' | 'Sandbox' | null>(null);
 
   const handleConnectToSalesforce = (type: 'Production' | 'Sandbox') => {
     setConnectionType(type);
-    // Simulate connecting logic
     setIsConnected(true);
   };
 
@@ -26,27 +35,17 @@ const Integrations = () => {
           <div className="space-y-1">
             <h2 className="text-lg font-semibold text-slate-800">Connection Status</h2>
             <p className="text-sm text-slate-600">
-              {isConnected
-                ? `Salesforce is connected to ${connectionType} environment.`
-                : 'Salesforce is not connected.'}
+              {isConnected ? `Salesforce is connected to ${connectionType} environment.` : 'Salesforce is not connected.'}
             </p>
           </div>
-          <span
-            className={`inline-flex items-center text-sm font-medium px-3 py-1.5 rounded-full ${
-              isConnected
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            }`}
-          >
+          <span className={`inline-flex items-center text-sm font-medium px-3 py-1.5 rounded-full ${isConnected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
             {isConnected ? (
               <>
-                <CheckCircle2 className="w-4 h-4 mr-1" />
-                Connected
+                <CheckCircle className="w-4 h-4 mr-1" /> Connected
               </>
             ) : (
               <>
-                <XCircle className="w-4 h-4 mr-1" />
-                Not Connected
+                <XCircle className="w-4 h-4 mr-1" /> Not Connected
               </>
             )}
           </span>
@@ -56,16 +55,10 @@ const Integrations = () => {
           <div className="mt-4">
             <p className="text-slate-600 mb-2">Choose your Salesforce environment to connect:</p>
             <div className="flex space-x-4">
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded-md"
-                onClick={() => handleConnectToSalesforce('Production')}
-              >
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={() => handleConnectToSalesforce('Production')}>
                 Connect to Production
               </button>
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded-md"
-                onClick={() => handleConnectToSalesforce('Sandbox')}
-              >
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={() => handleConnectToSalesforce('Sandbox')}>
                 Connect to Sandbox
               </button>
             </div>
@@ -74,13 +67,52 @@ const Integrations = () => {
 
         {isConnected && (
           <div className="mt-4">
-            <button
-              className="text-sm px-4 py-2 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200"
-            >
-              Manage Settings
-            </button>
+            <button className="text-sm px-4 py-2 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Manage Settings</button>
           </div>
         )}
+      </div>
+
+      <div className="max-w-6xl mx-auto p-6 space-y-6 mt-6">
+        <h1 className="text-2xl font-bold text-slate-900">App Integrations</h1>
+        <p className="text-slate-600 mb-4">Connect the tools your sales team already uses to streamline your workflow.</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {integrations.map((integration) => (
+            <div key={integration.id} className="flex flex-col justify-between border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition">
+              <div className="flex items-center space-x-3">
+                {integration.icon}
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">{integration.name}</h2>
+                  <p className="text-sm text-slate-500">{integration.description}</p>
+                </div>
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <span
+                  className={`inline-flex items-center text-xs font-semibold px-2 py-1 rounded-full ${
+                    integration.connected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}
+                >
+                  {integration.connected ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-1" /> Connected
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-4 h-4 mr-1" /> Not Connected
+                    </>
+                  )}
+                </span>
+                <button
+                  className={`text-sm font-medium px-3 py-1.5 rounded-md transition ${
+                    integration.connected ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                >
+                  {integration.connected ? 'Manage' : 'Connect'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
