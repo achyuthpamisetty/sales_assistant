@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
-import { useAuth } from '@/context/AuthProvider'; // Adjust the path as needed
+import { useAuth } from '@/context/AuthContext'; // Adjust the path as needed
 
 const Header: React.FC = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
