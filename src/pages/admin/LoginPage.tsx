@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { loginUser } from './auth'; // Your auth.ts file
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // reset error before trying
+    setError(null);
 
     try {
       await loginUser(email, password);
-      // Redirect or update UI on success
+      navigate('/'); // or wherever you want to redirect
     } catch (err: any) {
-      setError(err.message || 'Failed to login');
+      console.error('Login error:', err);
+      const message =
+        err?.message ||
+        err?.error_description ||
+        'Invalid email or password';
+      setError(message);
     }
   };
 
