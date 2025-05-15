@@ -1,52 +1,13 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (username: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // Using localStorage to persist auth state across reloads
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('auth_token');
-  });
-
-  const login = async (username: string, password: string) => {
-    // Replace this with real API call
-    if (username === 'admin' && password === 'admin') {
-      localStorage.setItem('auth_token', 'dummy_token');
-      setIsAuthenticated(true);
-    } else {
-      throw new Error('Invalid username or password');
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('auth_token');
-    setIsAuthenticated(false);
-  };
-
-  const register = async (username: string, password: string) => {
-    // Replace this with real registration API call
-    if (username && password) {
-      // For demo, just accept any non-empty username/password and login
-      localStorage.setItem('auth_token', 'dummy_token');
-      setIsAuthenticated(true);
-    } else {
-      throw new Error('Registration failed: username and password required');
-    }
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -54,4 +15,42 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const auth = localStorage.getItem('isAuthenticated');
+      setIsAuthenticated(auth === 'true');
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    // Here you would typically make an API call to authenticate
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    localStorage.setItem('isAuthenticated', 'true');
+    setIsAuthenticated(true);
+    navigate('/');
+  };
+
+  const logout = () => {
+    localStorage.removeItem('isAuthenticated');
+    setIsAuthenticated(false);
+    navigate('/auth');
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
