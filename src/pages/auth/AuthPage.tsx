@@ -15,24 +15,44 @@ const AuthPage = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      // Here you would typically make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
-      
-      // Store auth token or user data in localStorage/context
-      localStorage.setItem('isAuthenticated', 'true');
-      
-      // Redirect to dashboard
-      navigate('/');
-    } catch (error) {
-      console.error('Authentication error:', error);
-    } finally {
-      setLoading(false);
+  try {
+    const endpoint = isLogin ? '/api/login' : '/api/register';
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Something went wrong');
     }
-  };
+
+    if (isLogin) {
+      if (!result.user.isVerified) {
+        alert('Please verify your email before logging in.');
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem('token', result.token);
+      navigate('/');
+    } else {
+      alert('Registration successful! Check your email to verify your account.');
+    }
+  } catch (error: any) {
+    alert(error.message || 'Authentication failed');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
