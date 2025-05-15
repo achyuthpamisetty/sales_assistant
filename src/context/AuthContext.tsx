@@ -10,27 +10,34 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Using localStorage to persist auth state across reloads
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem('auth_token');
+  });
 
   const login = async (username: string, password: string) => {
-    // Replace with real API call
-    if (username && password) {
+    // Replace this with real API call
+    if (username === 'admin' && password === 'admin') {
+      localStorage.setItem('auth_token', 'dummy_token');
       setIsAuthenticated(true);
     } else {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid username or password');
     }
   };
 
   const logout = () => {
+    localStorage.removeItem('auth_token');
     setIsAuthenticated(false);
   };
 
   const register = async (username: string, password: string) => {
-    // Replace with real API call to register user
+    // Replace this with real registration API call
     if (username && password) {
+      // For demo, just accept any non-empty username/password and login
+      localStorage.setItem('auth_token', 'dummy_token');
       setIsAuthenticated(true);
     } else {
-      throw new Error('Registration failed');
+      throw new Error('Registration failed: username and password required');
     }
   };
 
