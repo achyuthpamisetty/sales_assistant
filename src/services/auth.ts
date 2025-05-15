@@ -1,8 +1,11 @@
 import { supabase } from './supabaseClient';
 
-export async function registerUser(firstName: string, lastName: string, email: string, password: string) {
-  // Supabase will throw error if user already exists on signUp, so no need for manual check on profiles by email
-
+export async function registerUser(
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+) {
   // Sign up user via Supabase auth
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -23,8 +26,7 @@ export async function registerUser(firstName: string, lastName: string, email: s
     if (insertError) throw insertError;
   }
 
-  // Supabase automatically sends verification email on signUp
-
+  // Supabase automatically sends verification email
   return data.user;
 }
 
