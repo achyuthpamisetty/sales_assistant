@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Headphones, Mail, Lock, User, Building } from 'lucide-react';
-import { useAuth } from '../context/AuthContext'; // adjust the import path if needed
+import { useAuth } from './context/AuthContext'; // adjust the import path if needed
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
