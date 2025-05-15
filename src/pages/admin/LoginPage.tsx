@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
-import { loginUser } from './auth'; // Your auth.ts file
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 const LoginPage: React.FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
-      await loginUser(email, password);
-      navigate('/'); // or wherever you want to redirect
+      await login(email, password);
     } catch (err: any) {
-      console.error('Login error:', err);
-      const message =
-        err?.message ||
-        err?.error_description ||
-        'Invalid email or password';
-      setError(message);
+      setError(err.message || 'Invalid email or password');
     }
   };
 
