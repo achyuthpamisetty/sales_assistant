@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserPlus, Search, Edit, Shield } from 'lucide-react';
+import { supabase } from '../supabaseClient'; // Adjust path to your supabase client
 
 interface User {
   id: string;
@@ -11,32 +12,53 @@ interface User {
 }
 
 const UserManagement = () => {
-  const [users] = useState<User[]>([
-    {
-      id: '1',
-      name: 'Alex Morgan',
-      email: 'alex.morgan@company.com',
-      role: 'Admin',
-      status: 'active',
-      lastLogin: '2023-11-07 14:30',
-    },
-    {
-      id: '2',
-      name: 'Sarah Thompson',
-      email: 'sarah.t@company.com',
-      role: 'Sales Manager',
-      status: 'active',
-      lastLogin: '2023-11-07 12:15',
-    },
-    {
-      id: '3',
-      name: 'Michael Chen',
-      email: 'michael.c@company.com',
-      role: 'Sales Representative',
-      status: 'active',
-      lastLogin: '2023-11-07 09:45',
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
+  useEffect(() => {
+    async function fetchUsers() {
+      let query = supabase.from('profiles').select('id, first_name, last_name, email, role, status, last_login');
+
+      // You can add filters if needed here, for example role or status filtering:
+      if (roleFilter) {
+        query = query.eq('role', roleFilter);
+      }
+      if (statusFilter) {
+        query = query.eq('status', statusFilter);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching users:', error);
+        return;
+      }
+
+      if (data) {
+        const usersList = data.map((u) => ({
+          id: u.id,
+          name: `${u.first_name} ${u.last_name}`,
+          email: u.email,
+          role: u.role || 'User',
+          status: u.status || 'inactive',
+          lastLogin: u.last_login || 'N/A',
+        }));
+
+        setUsers(usersList);
+      }
+    }
+
+    fetchUsers();
+  }, [roleFilter, statusFilter]);
+
+  // Filter users client-side based on searchTerm for simplicity
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
 
   return (
     <div className="space-y-6">
