@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Headphones, Mail, Lock, User, Building } from 'lucide-react';
 
-const AuthPage: React.FC = () => {
+const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,64 +14,31 @@ const AuthPage: React.FC = () => {
     company: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    if (!isLogin && formData.password.length < 6) {
-      alert('Password must be at least 6 characters long.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      const endpoint = isLogin ? '/api/login' : '/api/register';
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const text = await response.text();
-      let result;
-      try {
-        result = text ? JSON.parse(text) : {};
-      } catch (err) {
-        throw new Error('Invalid server response');
-      }
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Something went wrong');
-      }
-
-      if (isLogin) {
-        if (!result.user?.isVerified) {
-          alert('Please verify your email before logging in.');
-          setLoading(false);
-          return;
-        }
-
-        localStorage.setItem('token', result.token);
-        alert('Login successful!');
-        navigate('/');
-      } else {
-        alert('Registration successful! Please check your email to verify your account.');
-      }
-    } catch (err: any) {
-      alert(err.message || 'An error occurred');
+      // Here you would typically make an API call to authenticate
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
+      
+      // Store auth token or user data in localStorage/context
+      localStorage.setItem('isAuthenticated', 'true');
+      
+      // Redirect to dashboard
+      navigate('/');
+    } catch (error) {
+      console.error('Authentication error:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
@@ -93,52 +60,93 @@ const AuthPage: React.FC = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && (
               <>
-                <InputField
-                  label="Full Name"
-                  id="name"
-                  icon={<User className="h-5 w-5 text-gray-400" />}
-                  value={formData.name}
-                  name="name"
-                  onChange={handleInputChange}
-                  placeholder="John Doe"
-                  required
-                />
-                <InputField
-                  label="Company Name"
-                  id="company"
-                  icon={<Building className="h-5 w-5 text-gray-400" />}
-                  value={formData.company}
-                  name="company"
-                  onChange={handleInputChange}
-                  placeholder="Acme Inc"
-                  required
-                />
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Full Name
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700">
+                    Company Name
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Building className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      required
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="Acme Inc"
+                    />
+                  </div>
+                </div>
               </>
             )}
 
-            <InputField
-              label="Email address"
-              id="email"
-              icon={<Mail className="h-5 w-5 text-gray-400" />}
-              type="email"
-              value={formData.email}
-              name="email"
-              onChange={handleInputChange}
-              placeholder="you@example.com"
-              required
-            />
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
 
-            <InputField
-              label="Password"
-              id="password"
-              icon={<Lock className="h-5 w-5 text-gray-400" />}
-              type="password"
-              value={formData.password}
-              name="password"
-              onChange={handleInputChange}
-              placeholder="••••••••"
-              required
-            />
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
 
             {isLogin && (
               <div className="flex items-center justify-between">
@@ -153,6 +161,7 @@ const AuthPage: React.FC = () => {
                     Remember me
                   </label>
                 </div>
+
                 <div className="text-sm">
                   <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
                     Forgot your password?
@@ -204,50 +213,5 @@ const AuthPage: React.FC = () => {
     </div>
   );
 };
-
-type InputFieldProps = {
-  label: string;
-  id: string;
-  icon: React.ReactNode;
-  value: string;
-  name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
-  type?: string;
-  required?: boolean;
-};
-
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  id,
-  icon,
-  value,
-  name,
-  onChange,
-  placeholder,
-  type = 'text',
-  required = false,
-}) => (
-  <div>
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-      {label}
-    </label>
-    <div className="mt-1 relative">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        {icon}
-      </div>
-      <input
-        id={id}
-        name={name}
-        type={type}
-        required={required}
-        value={value}
-        onChange={onChange}
-        className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-        placeholder={placeholder}
-      />
-    </div>
-  </div>
-);
 
 export default AuthPage;
