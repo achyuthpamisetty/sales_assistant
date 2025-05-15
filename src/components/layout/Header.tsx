@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';   // <--- import navigate
-import { supabase } from '../supabaseClient';      // <--- import supabase
+import { supabase } from "../../supabaseClient";
+
 
 interface HeaderProps {
   children?: React.ReactNode;
