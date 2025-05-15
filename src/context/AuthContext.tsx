@@ -1,3 +1,25 @@
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+export default ProtectedRoute;
+
+
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,34 +48,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
+    const checkAuth = () => {
+      const auth = localStorage.getItem('isAuthenticated');
+      setIsAuthenticated(auth === 'true');
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || 'Login failed');
-    }
-
-    if (!result.user?.isVerified) {
-      throw new Error('Please verify your email before logging in.');
-    }
-
-    localStorage.setItem('token', result.token);
+    // Here you would typically make an API call to authenticate
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    localStorage.setItem('isAuthenticated', 'true');
     setIsAuthenticated(true);
     navigate('/');
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('isAuthenticated');
     setIsAuthenticated(false);
     navigate('/auth');
   };
