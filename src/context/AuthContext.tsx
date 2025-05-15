@@ -26,24 +26,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const auth = localStorage.getItem('isAuthenticated');
-      setIsAuthenticated(auth === 'true');
-    };
-
-    checkAuth();
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Here you would typically make an API call to authenticate
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    localStorage.setItem('isAuthenticated', 'true');
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Login failed');
+    }
+
+    if (!result.user?.isVerified) {
+      throw new Error('Please verify your email before logging in.');
+    }
+
+    localStorage.setItem('token', result.token);
     setIsAuthenticated(true);
     navigate('/');
   };
 
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
     navigate('/auth');
   };
