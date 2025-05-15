@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error: any) {
       console.error('Registration error:', error.message);
-      throw error;
+      throw new Error(error.message);
     }
   };
 
@@ -119,12 +119,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
+      // First check if the user exists
+      const { data: existingUser, error: userError } = await supabase
+        .from('user_verification')
+        .select('user_id')
+        .eq('user_id', user?.id)
+        .single();
+
+      if (!existingUser) {
+        throw new Error('Invalid credentials');
+      }
+
       const { data: { user }, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error('Invalid credentials');
+      }
 
       if (user) {
         // Check if email is verified
