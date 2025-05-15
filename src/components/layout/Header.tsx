@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';   // <--- import navigate
+import { useNavigate } from 'react-router-dom';
 import { supabase } from "../../supabaseClient";
-
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -16,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
-      navigate('/login');  // redirect after sign out
+      navigate('/auth');  // Redirect to /auth after sign out (consistent with ProtectedRoute)
     } catch (error) {
       console.error('Error signing out:', error);
       // Optionally show user an error message here
@@ -30,12 +29,11 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       </div>
       
       <div className="flex items-center space-x-4">
-        {/* Help and Notifications code unchanged */}
         <button className="text-slate-600 hover:text-primary-600 transition-colors">
           <HelpCircle className="h-5 w-5" />
         </button>
 
-        {/* ...notifications UI code... */}
+        {/* Notifications UI code omitted for brevity */}
 
         <div className="relative">
           <button 
@@ -60,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                   <span>Profile</span>
                 </button>
                 <button 
-                  onClick={handleSignOut}   // <--- add handler here
+                  onClick={handleSignOut}   // Sign out button triggers handler
                   className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
