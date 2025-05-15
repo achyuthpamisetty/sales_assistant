@@ -1,38 +1,53 @@
 import React, { useState } from 'react';
-import { loginUser } from '../services/auth';
+import { loginUser } from './auth'; // your auth.ts file
+import { useAuth } from './context/AuthContext'; // or wherever your auth context is
 
-export default function LoginPage() {
+const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
+
     try {
       await loginUser(email, password);
-      alert('Login successful!');
-      // Redirect user to protected page here
+      // Or if you use context login method: await login(email, password);
+      // Redirect or do whatever after login success
     } catch (error: any) {
-      alert(error.message);
+      // Show error message to user
+      setErrorMsg(error.message || 'Invalid login credentials');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        required
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        required
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        {errorMsg && (
+          <div className="error-message text-red-600 my-2">
+            {errorMsg}
+          </div>
+        )}
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
-}
+};
+
+export default LoginPage;
