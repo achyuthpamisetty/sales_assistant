@@ -4,7 +4,8 @@ import { supabase } from './supabaseClient'; // adjust path if needed
 
 interface User {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   role: string;
   status: 'active' | 'inactive';
@@ -13,24 +14,12 @@ interface User {
 
 const UserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
     async function fetchUsers() {
-      let query = supabase
-        .from('profiles')
-        .select('id, first_name, last_name, email, role, status, last_login');
-
-      if (roleFilter) {
-        query = query.eq('role', roleFilter);
-      }
-      if (statusFilter) {
-        query = query.eq('status', statusFilter);
-      }
-
-      const { data, error } = await query;
+      const { data, error } = await supabase
+        .from('profiles') // Your user table name
+        .select('id, first_name, last_name, email, role, status, lastLogin');
 
       if (error) {
         console.error('Error fetching users:', error);
@@ -38,27 +27,12 @@ const UserManagement = () => {
       }
 
       if (data) {
-        const usersList = data.map((u) => ({
-          id: u.id,
-          name: `${u.first_name} ${u.last_name}`,
-          email: u.email,
-          role: u.role || 'User',
-          status: (u.status as 'active' | 'inactive') || 'inactive',
-          lastLogin: u.last_login ? new Date(u.last_login).toLocaleDateString() : 'N/A',
-        }));
-        setUsers(usersList);
+        setUsers(data);
       }
     }
 
     fetchUsers();
-  }, [roleFilter, statusFilter]);
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  }, []);
   return (
     <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
       {/* Header */}
