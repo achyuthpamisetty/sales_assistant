@@ -9,6 +9,7 @@ import SlackIntegration from './pages/admin/SlackIntegration';
 
 // Lazy loaded pages
 const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
+const EmailVerification = lazy(() => import('./pages/auth/EmailVerification'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Leads = lazy(() => import('./pages/Leads'));
 const LeadDetail = lazy(() => import('./pages/LeadDetail'));
@@ -22,7 +23,7 @@ const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
-const Integrations = lazy(() => import('./pages/admin/Integrations')); // Ensure Integrations is imported
+const Integrations = lazy(() => import('./pages/admin/Integrations'));
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/verify" element={<EmailVerification />} />
 
             <Route
               path="/"
