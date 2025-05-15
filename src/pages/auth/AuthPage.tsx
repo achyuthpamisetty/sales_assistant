@@ -23,19 +23,26 @@ const AuthPage = () => {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     });
 
-    const result = await response.json();
+    let result;
+    const text = await response.text(); // get raw text first
+
+    try {
+      result = text ? JSON.parse(text) : {};
+    } catch (jsonError) {
+      throw new Error('Invalid JSON response from server');
+    }
 
     if (!response.ok) {
       throw new Error(result.message || 'Something went wrong');
     }
 
     if (isLogin) {
-      if (!result.user.isVerified) {
+      if (!result.user?.isVerified) {
         alert('Please verify your email before logging in.');
         setLoading(false);
         return;
@@ -52,6 +59,7 @@ const AuthPage = () => {
     setLoading(false);
   }
 };
+
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
