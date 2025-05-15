@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Headphones, Mail, Lock, User, Building } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext'; // adjust the import path if needed
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login, signup } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -19,13 +21,11 @@ const AuthPage = () => {
     setLoading(true);
 
     try {
-      // Here you would typically make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
-      
-      // Store auth token or user data in localStorage/context
-      localStorage.setItem('isAuthenticated', 'true');
-      
-      // Redirect to dashboard
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        await signup(formData.name, formData.email, formData.password, formData.company);
+      }
       navigate('/');
     } catch (error) {
       console.error('Authentication error:', error);
