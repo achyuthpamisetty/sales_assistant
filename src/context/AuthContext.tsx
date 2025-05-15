@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabaseClient'; // Adjust path
+import { supabase } from '../supabaseClient'; // Adjust path
 
 interface User {
   id: string;
