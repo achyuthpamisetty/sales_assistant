@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
-import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
+import { Bell, HelpCircle, User, LogOut, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // ✅ Correct relative path
 
-const Header = () => {
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+
+const Header: React.FC<HeaderProps> = ({ children }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { logout } = useAuth();
 
   return (
     <header className="z-10 flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm md:px-6">
       <div className="flex items-center space-x-2">
-        <Link to="/" className="text-xl font-semibold text-primary-700">
-          CRM
-        </Link>
+        {children}
       </div>
-
+      
       <div className="flex items-center space-x-4">
         <button className="text-slate-600 hover:text-primary-600 transition-colors">
           <HelpCircle className="h-5 w-5" />
         </button>
-
+        
         <div className="relative">
-          <button
+          <button 
             className="relative text-slate-600 hover:text-primary-600 transition-colors"
             onClick={() => setShowNotifications(!showNotifications)}
           >
@@ -31,7 +31,7 @@ const Header = () => {
               3
             </span>
           </button>
-
+          
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 rounded-md border border-slate-200 bg-white p-2 shadow-lg animate-fade-in">
               <div className="flex items-center justify-between border-b pb-2">
@@ -43,9 +43,7 @@ const Header = () => {
               <div className="max-h-96 overflow-y-auto py-2">
                 <div className="rounded-md bg-slate-50 p-3 mb-2">
                   <p className="text-sm font-medium">Opportunity Update</p>
-                  <p className="text-xs text-slate-500">
-                    Summit Financial Group opportunity moved to Negotiation stage
-                  </p>
+                  <p className="text-xs text-slate-500">Summit Financial Group opportunity moved to Negotiation stage</p>
                   <p className="mt-1 text-xs text-slate-400">10 minutes ago</p>
                 </div>
                 <div className="rounded-md p-3 mb-2">
@@ -55,9 +53,7 @@ const Header = () => {
                 </div>
                 <div className="rounded-md p-3">
                   <p className="text-sm font-medium">Task Reminder</p>
-                  <p className="text-xs text-slate-500">
-                    Follow up with Cloudburst Technologies due today
-                  </p>
+                  <p className="text-xs text-slate-500">Follow up with Cloudburst Technologies due today</p>
                   <p className="mt-1 text-xs text-slate-400">3 hours ago</p>
                 </div>
               </div>
@@ -69,9 +65,9 @@ const Header = () => {
             </div>
           )}
         </div>
-
+        
         <div className="relative">
-          <button
+          <button 
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center space-x-1 rounded-full"
           >
@@ -80,7 +76,7 @@ const Header = () => {
             </div>
             <span className="hidden text-sm font-medium md:block">Alex Morgan</span>
           </button>
-
+          
           {showUserMenu && (
             <div className="absolute right-0 mt-2 w-56 rounded-md border border-slate-200 bg-white shadow-lg animate-fade-in">
               <div className="p-3 border-b">
@@ -92,10 +88,7 @@ const Header = () => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </button>
-                <button
-                  className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors"
-                  onClick={logout} // ✅ Hooked up to context logout
-                >
+                <button className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
                 </button>
@@ -109,3 +102,6 @@ const Header = () => {
 };
 
 export default Header;
+
+
+ChatGPT said:
