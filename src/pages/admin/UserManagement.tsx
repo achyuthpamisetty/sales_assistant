@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { UserPlus, Search, Edit, Shield } from 'lucide-react';
-import { supabase } from './supabaseClient'; // Make sure your supabase client is correctly configured
 
 interface User {
   id: string;
-  first_name: string;
-  last_name: string;
+  name: string;
   email: string;
   role: string;
   status: 'active' | 'inactive';
@@ -13,26 +11,32 @@ interface User {
 }
 
 const UserManagement = () => {
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    async function fetchUsers() {
-      const { data, error } = await supabase
-        .from('profiles') // Your user table name
-        .select('id, first_name, last_name, email, role, status, lastLogin');
-
-      if (error) {
-        console.error('Error fetching users:', error);
-        return;
-      }
-
-      if (data) {
-        setUsers(data);
-      }
-    }
-
-    fetchUsers();
-  }, []);
+  const [users] = useState<User[]>([
+    {
+      id: '1',
+      name: 'Alex Morgan',
+      email: 'alex.morgan@company.com',
+      role: 'Admin',
+      status: 'active',
+      lastLogin: '2023-11-07 14:30',
+    },
+    {
+      id: '2',
+      name: 'Sarah Thompson',
+      email: 'sarah.t@company.com',
+      role: 'Sales Manager',
+      status: 'active',
+      lastLogin: '2023-11-07 12:15',
+    },
+    {
+      id: '3',
+      name: 'Michael Chen',
+      email: 'michael.c@company.com',
+      role: 'Sales Representative',
+      status: 'active',
+      lastLogin: '2023-11-07 09:45',
+    },
+  ]);
 
   return (
     <div className="space-y-6">
@@ -107,13 +111,16 @@ const UserManagement = () => {
                       <div className="h-10 w-10 flex-shrink-0">
                         <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
                           <span className="text-primary-700 font-medium">
-                            {`${user.first_name[0]}${user.last_name[0]}`}
+                            {user.name
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')}
                           </span>
                         </div>
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-slate-900">
-                          {user.first_name} {user.last_name}
+                          {user.name}
                         </div>
                         <div className="text-sm text-slate-500">{user.email}</div>
                       </div>
@@ -130,11 +137,11 @@ const UserManagement = () => {
                   {/* Status */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         user.status === 'active'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-slate-100 text-slate-800'
-                      }`}
+                      }}
                     >
                       {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                     </span>
@@ -167,8 +174,8 @@ const UserManagement = () => {
           <div className="flex items-center justify-between">
             <div className="text-sm text-slate-500">
               Showing <span className="font-medium">1</span> to{' '}
-              <span className="font-medium">{users.length}</span> of{' '}
-              <span className="font-medium">{users.length}</span> users
+              <span className="font-medium">3</span> of{' '}
+              <span className="font-medium">3</span> users
             </div>
             <div className="flex space-x-2">
               <button
