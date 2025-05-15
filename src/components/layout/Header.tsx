@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
-import { useAuth } from '/context/AuthContext'; // Adjust the path as needed
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // ✅ Correct relative path
 
-const Header: React.FC = () => {
+const Header = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { logout } = useAuth(); // <-- use logout from context
+  const { logout } = useAuth();
 
   return (
     <header className="z-10 flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm md:px-6">
       <div className="flex items-center space-x-2">
-        {/* Optional slot for logo, search, etc. */}
+        <Link to="/" className="text-xl font-semibold text-primary-700">
+          CRM
+        </Link>
       </div>
 
       <div className="flex items-center space-x-4">
@@ -47,9 +50,7 @@ const Header: React.FC = () => {
                 </div>
                 <div className="rounded-md p-3 mb-2">
                   <p className="text-sm font-medium">New Lead</p>
-                  <p className="text-xs text-slate-500">
-                    Emma Williams from HealthFirst Technologies
-                  </p>
+                  <p className="text-xs text-slate-500">Emma Williams from HealthFirst Technologies</p>
                   <p className="mt-1 text-xs text-slate-400">1 hour ago</p>
                 </div>
                 <div className="rounded-md p-3">
@@ -92,8 +93,8 @@ const Header: React.FC = () => {
                   <span>Profile</span>
                 </button>
                 <button
-                  onClick={logout} // <-- trigger logout on click
                   className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors"
+                  onClick={logout} // ✅ Hooked up to context logout
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
