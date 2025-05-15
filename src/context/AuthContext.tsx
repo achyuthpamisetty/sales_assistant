@@ -1,13 +1,45 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (username: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const login = async (username: string, password: string) => {
+    // Replace with real API call
+    if (username && password) {
+      setIsAuthenticated(true);
+    } else {
+      throw new Error('Invalid credentials');
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+  };
+
+  const register = async (username: string, password: string) => {
+    // Replace with real API call to register user
+    if (username && password) {
+      setIsAuthenticated(true);
+    } else {
+      throw new Error('Registration failed');
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -15,42 +47,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const auth = localStorage.getItem('isAuthenticated');
-      setIsAuthenticated(auth === 'true');
-    };
-
-    checkAuth();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    // Here you would typically make an API call to authenticate
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    localStorage.setItem('isAuthenticated', 'true');
-    setIsAuthenticated(true);
-    navigate('/');
-  };
-
-  const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    setIsAuthenticated(false);
-    navigate('/auth');
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
 };
