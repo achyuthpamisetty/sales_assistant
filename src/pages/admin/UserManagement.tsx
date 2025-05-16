@@ -137,11 +137,11 @@ const UserManagement = () => {
                   {/* Status */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         user.status === 'active'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-slate-100 text-slate-800'
-                      }}
+                      }`}
                     >
                       {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                     </span>
