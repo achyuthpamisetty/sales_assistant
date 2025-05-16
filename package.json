@@ -13,7 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@supabase/supabase-js": "^2.49.4",
-    "axios": "^1.6.2",
+    "axios": "^1.9.0",
     "chart.js": "^4.4.0",
     "date-fns": "^2.30.0",
     "jsforce": "^1.11.1",
