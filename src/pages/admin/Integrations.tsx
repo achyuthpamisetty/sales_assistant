@@ -1,4 +1,3 @@
-// Full updated Salesforce Integration page
 import React, { useState } from 'react';
 
 const Integrations = () => {
@@ -8,64 +7,61 @@ const Integrations = () => {
   const handleConnect = () => {
     if (salesforceEnv) {
       alert(`Connecting to Salesforce ${salesforceEnv}`);
+      // You can replace this alert with your actual connection logic
     } else {
-      alert('Please select a Salesforce environment (Sandbox or Production)');
+      alert('Please select a Salesforce environment');
     }
   };
 
   return (
-    <div className="flex h-full min-h-screen">
-      <div className="w-64 bg-gray-800 text-white p-4">
-        <h1 className="text-xl font-bold mb-4">Integrations</h1>
-        <ul>
-          <li>
-            <button
-              onClick={() => setConnectionType('salesforce')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${
-                connectionType === 'salesforce' ? 'bg-blue-600' : 'bg-gray-700'
-              }`}
+    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-2xl font-semibold text-gray-900 mb-6">Integrations</h1>
+
+      <div className="bg-white shadow rounded-lg p-6">
+        <h2 className="text-xl font-medium text-gray-800 mb-4">CRM Connections</h2>
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Select Integration
+            </label>
+            <select
+              value={connectionType || ''}
+              onChange={(e) => setConnectionType(e.target.value as 'salesforce')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
-              Connect to Salesforce
-            </button>
-          </li>
-        </ul>
-      </div>
+              <option value="">-- Select an integration --</option>
+              <option value="salesforce">Salesforce</option>
+              {/* Add more options here as you expand */}
+            </select>
+          </div>
 
-      <div className="flex-1 p-6 bg-gray-100">
-        {connectionType === 'salesforce' ? (
-          <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-2">Salesforce Integration</h2>
-            <p className="text-gray-600 mb-4">Select the environment you want to connect to:</p>
+          {connectionType === 'salesforce' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Select Environment
+                </label>
+                <select
+                  value={salesforceEnv || ''}
+                  onChange={(e) => setSalesforceEnv(e.target.value as 'sandbox' | 'production')}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value="">-- Select environment --</option>
+                  <option value="sandbox">Sandbox</option>
+                  <option value="production">Production</option>
+                </select>
+              </div>
 
-            <div className="space-y-2">
               <button
-                onClick={() => setSalesforceEnv('sandbox')}
-                className={`w-full py-2 px-4 rounded-lg text-white ${
-                  salesforceEnv === 'sandbox' ? 'bg-blue-500' : 'bg-gray-400'
-                }`}
+                onClick={handleConnect}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                Sandbox
-              </button>
-              <button
-                onClick={() => setSalesforceEnv('production')}
-                className={`w-full py-2 px-4 rounded-lg text-white ${
-                  salesforceEnv === 'production' ? 'bg-blue-500' : 'bg-gray-400'
-                }`}
-              >
-                Production
+                Connect to Salesforce
               </button>
             </div>
-
-            <button
-              onClick={handleConnect}
-              className="mt-6 w-full py-2 px-4 rounded-lg bg-green-600 text-white font-semibold"
-            >
-              Connect to {salesforceEnv ? salesforceEnv : 'Salesforce'}
-            </button>
-          </div>
-        ) : (
-          <p className="text-center text-gray-500 text-lg">Select an integration from the sidebar.</p>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
