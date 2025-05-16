@@ -11,13 +11,21 @@ import {
   Video,
 } from 'lucide-react';
 
+// Constants for Salesforce OAuth
+const SALESFORCE_CLIENT_ID = 'YOUR_SALESFORCE_CLIENT_ID';
+const SALESFORCE_REDIRECT_URI = 'YOUR_REDIRECT_URI'; // e.g., http://localhost:3000/oauth/callback
+const SALESFORCE_AUTH_URL = `https://login.salesforce.com/services/oauth2/authorize?response_type=token&client_id=${SALESFORCE_CLIENT_ID}&redirect_uri=${encodeURIComponent(SALESFORCE_REDIRECT_URI)}`;
+
 const integrations = [
   {
     id: '1',
     name: 'Salesforce',
     description: 'CRM data sync with full opportunity tracking.',
     icon: <Cloud className="h-6 w-6 text-blue-700" />,
-    connected: true,
+    connected: false,
+    onConnect: () => {
+      window.location.href = SALESFORCE_AUTH_URL;
+    },
   },
   {
     id: '2',
@@ -114,6 +122,7 @@ const Integrations = () => {
                 )}
               </span>
               <button
+                onClick={integration.onConnect}
                 className={`text-sm font-medium px-3 py-1.5 rounded-md transition ${
                   integration.connected
                     ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
