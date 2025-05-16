@@ -2,7 +2,7 @@ import React from 'react';
 import { MessageSquare, CheckCircle2, XCircle } from 'lucide-react';
 
 const SlackIntegration = () => {
-  const isConnected = true; // Later, make this dynamic
+  const isConnected = false; // Default set to false, i.e., Not Connected
 
   return (
     <div className="max-w-4xl mx-auto p-6">
