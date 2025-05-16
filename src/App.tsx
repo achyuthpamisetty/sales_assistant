@@ -23,7 +23,7 @@ const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
-const Integrations = lazy(() => import('./pages/Integrations')); // 👈 NEW LINE
+const Integrations = lazy(() => import('./pages/admin/Integrations')); // 👈 NEW LINE
 
 function App() {
   return (
