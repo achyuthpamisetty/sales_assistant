@@ -190,7 +190,7 @@ function App() {
 
 
             <Route
-              path="/integrations" // 👈 NEW ROUTE
+              path="/pages/admin/Integrations" // 👈 NEW ROUTE
               element={
                 <ProtectedRoute>
                   <Layout>
