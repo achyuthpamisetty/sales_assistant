@@ -131,31 +131,13 @@ const Integrations = () => {
                     ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
+                disabled={integration.connected}
               >
                 {integration.connected ? 'Manage' : 'Connect'}
               </button>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Quick Tips Section */}
-      <div className="mt-8 bg-slate-50 rounded-lg p-6 border border-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Quick Tips</h2>
-        <ul className="space-y-2 text-slate-600">
-          <li className="flex items-center">
-            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
-            Connect your most-used apps to automate data sync
-          </li>
-          <li className="flex items-center">
-            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
-            Enable Salesforce integration for comprehensive CRM data
-          </li>
-          <li className="flex items-center">
-            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
-            Use calendar integrations to streamline meeting scheduling
-          </li>
-        </ul>
       </div>
     </div>
   );
