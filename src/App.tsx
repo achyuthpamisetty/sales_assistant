@@ -23,6 +23,7 @@ const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
+const Integrations = lazy(() => import('./pages/Integrations')); // 👈 NEW LINE
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
-            
+
             <Route
               path="/"
               element={
@@ -42,7 +43,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/leads"
               element={
@@ -53,7 +54,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/leads/:id"
               element={
@@ -64,7 +65,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/accounts"
               element={
@@ -75,7 +76,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/accounts/:id"
               element={
@@ -86,7 +87,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/contacts"
               element={
@@ -97,7 +98,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/contacts/:id"
               element={
@@ -108,7 +109,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/opportunities"
               element={
@@ -119,7 +120,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/opportunities/:id"
               element={
@@ -130,7 +131,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/pipeline"
               element={
@@ -141,7 +142,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/email-composer"
               element={
@@ -152,7 +153,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/admin/users"
               element={
@@ -163,13 +164,24 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/admin/permissions"
               element={
                 <ProtectedRoute>
                   <Layout>
                     <Permissions />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/integrations" // 👈 NEW ROUTE
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Integrations />
                   </Layout>
                 </ProtectedRoute>
               }
