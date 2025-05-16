@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const adminNavigation = [
     { name: 'User Management', href: '/admin/users', icon: UserPlus },
     { name: 'Permissions', href: '/admin/permissions', icon: Shield },
-    { name: 'Integrations', href: '/admin/Integrations', icon: Plug },
+    { name: 'Integrations', href: '/pages/admin/Integrations', icon: Plug },
     { name: 'Slack', href: '/admin/Slack', icon: Plug },
   ];
   
