@@ -1,3 +1,4 @@
+// Full updated Salesforce Integration page
 import React, { useState } from 'react';
 
 const Integrations = () => {
@@ -14,7 +15,6 @@ const Integrations = () => {
 
   return (
     <div className="flex h-full min-h-screen">
-      {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white p-4">
         <h1 className="text-xl font-bold mb-4">Integrations</h1>
         <ul>
@@ -31,7 +31,6 @@ const Integrations = () => {
         </ul>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-100">
         {connectionType === 'salesforce' ? (
           <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
