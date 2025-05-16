@@ -5,7 +5,7 @@ import LoadingSpinner from './components/ui/LoadingSpinner';
 import { SalesforceProvider } from './context/SalesforceContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import SlackIntegration from './admin/SlackIntegration';
+import SlackIntegration from './pages/SlackIntegration';
 
 // Auth pages
 const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
