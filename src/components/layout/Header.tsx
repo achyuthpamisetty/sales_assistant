@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "../../supabaseClient";
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -11,6 +12,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleSignOut = async () => {
     try {
@@ -43,14 +45,16 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700">
               <User className="h-5 w-5" />
             </div>
-            <span className="hidden text-sm font-medium md:block">Alex Morgan</span>
+            <span className="hidden text-sm font-medium md:block">
+              {user?.user_metadata?.first_name} {user?.user_metadata?.last_name}
+            </span>
           </button>
           
           {showUserMenu && (
             <div className="absolute right-0 mt-2 w-56 rounded-md border border-slate-200 bg-white shadow-lg animate-fade-in">
               <div className="p-3 border-b">
-                <p className="font-medium">Alex Morgan</p>
-                <p className="text-xs text-slate-500">alex.morgan@company.com</p>
+                <p className="font-medium">{user?.user_metadata?.first_name} {user?.user_metadata?.last_name}</p>
+                <p className="text-xs text-slate-500">{user?.email}</p>
               </div>
               <div className="p-2">
                 <button className="flex w-full items-center rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors">
