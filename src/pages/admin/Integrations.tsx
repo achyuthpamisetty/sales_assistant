@@ -1,72 +1,47 @@
 import React, { useState } from 'react';
+import salesforceLogo from '@/assets/salesforce-logo.png'; // Adjust path to your actual static asset
 
 const Integrations = () => {
-  const [connectionType, setConnectionType] = useState<'salesforce' | null>(null);
-  const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | null>(null);
+  const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | ''>('');
 
   const handleConnect = () => {
     if (salesforceEnv) {
       alert(`Connecting to Salesforce ${salesforceEnv}`);
     } else {
-      alert('Please select a Salesforce environment (Sandbox or Production)');
+      alert('Please select an environment');
     }
   };
 
   return (
-    <div className="flex h-full min-h-screen">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white p-4">
-        <h1 className="text-xl font-bold mb-4">Integrations</h1>
-        <ul>
-          <li>
-            <button
-              onClick={() => setConnectionType('salesforce')}
-              className={`w-full text-left py-2 px-4 rounded-lg ${
-                connectionType === 'salesforce' ? 'bg-blue-600' : 'bg-gray-700'
-              }`}
-            >
-              Connect to Salesforce
-            </button>
-          </li>
-        </ul>
-      </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
+        {/* Salesforce Logo */}
+        <img
+          src={salesforceLogo}
+          alt="Salesforce"
+          className="mx-auto w-24 h-24 mb-4"
+        />
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100">
-        {connectionType === 'salesforce' ? (
-          <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-2">Salesforce Integration</h2>
-            <p className="text-gray-600 mb-4">Select the environment you want to connect to:</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          Connect to Salesforce
+        </h2>
 
-            <div className="space-y-2">
-              <button
-                onClick={() => setSalesforceEnv('sandbox')}
-                className={`w-full py-2 px-4 rounded-lg text-white ${
-                  salesforceEnv === 'sandbox' ? 'bg-blue-500' : 'bg-gray-400'
-                }`}
-              >
-                Sandbox
-              </button>
-              <button
-                onClick={() => setSalesforceEnv('production')}
-                className={`w-full py-2 px-4 rounded-lg text-white ${
-                  salesforceEnv === 'production' ? 'bg-blue-500' : 'bg-gray-400'
-                }`}
-              >
-                Production
-              </button>
-            </div>
+        <select
+          value={salesforceEnv}
+          onChange={(e) => setSalesforceEnv(e.target.value as 'sandbox' | 'production')}
+          className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Select Environment</option>
+          <option value="sandbox">Sandbox</option>
+          <option value="production">Production</option>
+        </select>
 
-            <button
-              onClick={handleConnect}
-              className="mt-6 w-full py-2 px-4 rounded-lg bg-green-600 text-white font-semibold"
-            >
-              Connect to {salesforceEnv ? salesforceEnv : 'Salesforce'}
-            </button>
-          </div>
-        ) : (
-          <p className="text-center text-gray-500 text-lg">Select an integration from the sidebar.</p>
-        )}
+        <button
+          onClick={handleConnect}
+          className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          Connect
+        </button>
       </div>
     </div>
   );
