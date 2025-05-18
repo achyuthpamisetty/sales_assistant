@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(400).json({ error: 'Missing or invalid authorization code' });
   }
 
-  const clientId = process.env.SF_CLIENT_ID;
-  const clientSecret = process.env.SF_CLIENT_SECRET;
-  const redirectUri = process.env.SF_REDIRECT_URI;
+  const clientId = process.env.VITE_SF_CLIENT_ID;
+  const clientSecret = process.env.VITE_SF_CLIENT_SECRET;
+  const redirectUri = process.env.VITE_SF_REDIRECT_URI;
 
   if (!clientId || !clientSecret || !redirectUri) {
     return res.status(500).json({ error: 'Server configuration error: missing Salesforce environment variables' });
