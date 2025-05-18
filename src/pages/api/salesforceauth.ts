@@ -1,11 +1,11 @@
-// pages/api/salesforce/auth.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { env } = req.query;
 
-  const clientId = import.meta.env.NEXT_PUBLIC_SF_CLIENT_ID;
-  const redirectUri = import.meta.env.NEXT_PUBLIC_SF_REDIRECT_URI;
+  // Use process.env, not import.meta.env in Next.js
+  const clientId = process.env.NEXT_PUBLIC_SF_CLIENT_ID;
+  const redirectUri = process.env.NEXT_PUBLIC_SF_REDIRECT_URI;
 
   const baseUrl = env === 'sandbox' ? 'https://test.salesforce.com' : 'https://login.salesforce.com';
 
