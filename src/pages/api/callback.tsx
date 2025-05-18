@@ -1,29 +1,30 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function SalesforceCallback() {
-  const router = useRouter();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const exchangeCodeForToken = async () => {
-      const code = router.query.code as string;
-      if (!code) return;  // Wait until code is available
+      const code = searchParams.get('code');
+      if (!code) return; // Wait until code is available
 
       try {
         const res = await axios.post('/api/salesforce/token', { code });
         const { access_token, instance_url } = res.data;
 
-        // Optionally store tokens or fetch data here
+        // Optionally store tokens or fetch data here, e.g., localStorage
 
-        router.push(`/integrations?success=true`);
+        navigate('/integrations?success=true');
       } catch (err) {
         console.error('Token exchange failed', err);
       }
     };
 
     exchangeCodeForToken();
-  }, [router.query.code]);
+  }, [searchParams, navigate]);
 
   return <div>Connecting to Salesforce...</div>;
 }
