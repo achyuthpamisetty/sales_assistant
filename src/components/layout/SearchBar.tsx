@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Sparkles, UserPlus, ExternalLink, Building, Mail, Phone, MapPin } from 'lucide-react';
+import { Search, Sparkles, UserPlus, ExternalLink, Building, Mail, Phone, MapPin, X } from 'lucide-react';
 import { useSalesforce } from '../../context/SalesforceContext';
 
 interface SearchResult {
@@ -15,18 +15,47 @@ interface SearchResult {
   source: string;
 }
 
+interface LeadForm {
+  name: string;
+  title: string;
+  company: string;
+  email: string;
+  phone: string;
+  website?: string;
+  industry?: string;
+  numberOfEmployees?: string;
+  annualRevenue?: string;
+  leadSource: string;
+  notes?: string;
+}
+
 const SearchBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [selectedResult, setSelectedResult] = useState<SearchResult | null>(null);
+  const [leadForm, setLeadForm] = useState<LeadForm>({
+    name: '',
+    title: '',
+    company: '',
+    email: '',
+    phone: '',
+    website: '',
+    industry: '',
+    numberOfEmployees: '',
+    annualRevenue: '',
+    leadSource: '',
+    notes: ''
+  });
+  
   const { leads, contacts, accounts } = useSalesforce();
 
   const searchSalesforce = (term: string) => {
     const searchRegex = new RegExp(term, 'i');
     const sfResults: SearchResult[] = [];
 
-    // Search leads
     leads.forEach(lead => {
       if (
         searchRegex.test(lead.name) ||
@@ -115,8 +144,36 @@ const SearchBar: React.FC = () => {
   };
 
   const handleAddLead = (result: SearchResult) => {
-    // Here you would implement the logic to add the lead to Salesforce
-    alert(`Adding ${result.name} as a new lead`);
+    setSelectedResult(result);
+    setLeadForm({
+      name: result.name || '',
+      title: result.title || '',
+      company: result.company || '',
+      email: result.email || '',
+      phone: result.phone || '',
+      website: '',
+      industry: '',
+      numberOfEmployees: '',
+      annualRevenue: '',
+      leadSource: result.source,
+      notes: ''
+    });
+    setShowLeadForm(true);
+  };
+
+  const handleCreateLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Here you would implement the actual lead creation logic
+      console.log('Creating lead:', leadForm);
+      setShowLeadForm(false);
+      setSelectedResult(null);
+      // Show success message
+      alert('Lead created successfully!');
+    } catch (error) {
+      console.error('Error creating lead:', error);
+      alert('Error creating lead. Please try again.');
+    }
   };
 
   return (
@@ -227,6 +284,159 @@ const SearchBar: React.FC = () => {
                   </div>
                 ))
               )}
+            </div>
+          )}
+
+          {showLeadForm && selectedResult && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold">Create New Lead</h2>
+                    <button
+                      onClick={() => setShowLeadForm(false)}
+                      className="text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleCreateLead} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Name</label>
+                        <input
+                          type="text"
+                          value={leadForm.name}
+                          onChange={(e) => setLeadForm({...leadForm, name: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Title</label>
+                        <input
+                          type="text"
+                          value={leadForm.title}
+                          onChange={(e) => setLeadForm({...leadForm, title: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Company</label>
+                        <input
+                          type="text"
+                          value={leadForm.company}
+                          onChange={(e) => setLeadForm({...leadForm, company: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Email</label>
+                        <input
+                          type="email"
+                          value={leadForm.email}
+                          onChange={(e) => setLeadForm({...leadForm, email: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Phone</label>
+                        <input
+                          type="tel"
+                          value={leadForm.phone}
+                          onChange={(e) => setLeadForm({...leadForm, phone: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Website</label>
+                        <input
+                          type="url"
+                          value={leadForm.website}
+                          onChange={(e) => setLeadForm({...leadForm, website: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Industry</label>
+                        <select
+                          value={leadForm.industry}
+                          onChange={(e) => setLeadForm({...leadForm, industry: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        >
+                          <option value="">Select Industry</option>
+                          <option value="Technology">Technology</option>
+                          <option value="Healthcare">Healthcare</option>
+                          <option value="Finance">Finance</option>
+                          <option value="Manufacturing">Manufacturing</option>
+                          <option value="Retail">Retail</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Number of Employees</label>
+                        <input
+                          type="text"
+                          value={leadForm.numberOfEmployees}
+                          onChange={(e) => setLeadForm({...leadForm, numberOfEmployees: e.target.value})}
+                          placeholder="e.g., 100-500"
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Annual Revenue</label>
+                        <input
+                          type="text"
+                          value={leadForm.annualRevenue}
+                          onChange={(e) => setLeadForm({...leadForm, annualRevenue: e.target.value})}
+                          placeholder="e.g., $1M - $5M"
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700">Lead Source</label>
+                        <input
+                          type="text"
+                          value={leadForm.leadSource}
+                          onChange={(e) => setLeadForm({...leadForm, leadSource: e.target.value})}
+                          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                          required
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700">Notes</label>
+                      <textarea
+                        value={leadForm.notes}
+                        onChange={(e) => setLeadForm({...leadForm, notes: e.target.value})}
+                        rows={3}
+                        className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                        placeholder="Add any additional notes or context about this lead..."
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-3 mt-6">
+                      <button
+                        type="button"
+                        onClick={() => setShowLeadForm(false)}
+                        className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md"
+                      >
+                        Create Lead
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           )}
 
