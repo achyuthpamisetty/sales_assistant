@@ -7,23 +7,20 @@ const Integrations = () => {
   const [connectionType, setConnectionType] = useState<'salesforce' | ''>('');
   const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | ''>('');
 
-  const handleConnect = () => {
-    if (!salesforceEnv) {
-      alert('Please select a Salesforce environment');
-      return;
-    }
+const handleConnect = () => {
+  if (!salesforceEnv) {
+    alert('Please select a Salesforce environment');
+    return;
+  }
 
-const baseUrl =
-  salesforceEnv === 'sandbox'
-    ? 'https://test.salesforce.com'
-    : 'https://login.salesforce.com';
+  // Force sandbox URL for Trailhead playground
+  const baseUrl = 'https://test.salesforce.com';
 
-const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${encodeURIComponent(
-VITE_SF_CLIENT_ID)}&redirect_uri=${encodeURIComponent(VITE_SF_REDIRECT_URI)}&scope=api%20refresh_token`;
+  const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${encodeURIComponent(
+    SF_CLIENT_ID)}&redirect_uri=${encodeURIComponent(SF_REDIRECT_URI)}&scope=api%20refresh_token`;
 
-window.location.href = authUrl;
-
-  };
+  window.location.href = authUrl;
+};
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
