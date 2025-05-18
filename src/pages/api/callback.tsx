@@ -12,7 +12,7 @@ export default function SalesforceCallback() {
       if (!code) return;
 
       try {
-        const res = await axios.post('/api/salesforce/token', { code });
+        const res = await axios.post('/api/token', { code });
         const { access_token, instance_url } = res.data;
 
         // Optionally fetch data here or redirect
