@@ -13,7 +13,7 @@ app.get('/api/salesforce/oauth', (req, res) => {
     return res.status(500).json({ error: 'Missing Salesforce client ID or redirect URI in env variables' });
   }
 
-  const baseUrl = env === 'sandbox' ? 'https://empathetic-panda-5ixqr3-dev-ed.trailblaze.lightning.force.com/' : 'https://login.salesforce.com';
+  const baseUrl = env === 'sandbox' ? 'https://test.salesforce.com' : 'https://login.salesforce.com';
 
   const url = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=api refresh_token`;
 
