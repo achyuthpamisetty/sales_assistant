@@ -18,9 +18,6 @@ const handleConnect = () => {
 const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${encodeURIComponent(SF_CLIENT_ID)}&redirect_uri=${encodeURIComponent(SF_REDIRECT_URI)}&scope=api%20refresh_token`;
 
 window.location.href = authUrl;
-
-
-  window.location.href = authUrl;
 };
 
   return (
