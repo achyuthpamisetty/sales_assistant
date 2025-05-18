@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+const SF_CLIENT_ID = process.env.NEXT_PUBLIC_SF_CLIENT_ID || '';
+const SF_REDIRECT_URI = process.env.NEXT_PUBLIC_SF_REDIRECT_URI || '';
+
 const Integrations = () => {
   const [connectionType, setConnectionType] = useState<'salesforce' | null>(null);
   const [salesforceEnv, setSalesforceEnv] = useState<'sandbox' | 'production' | null>(null);
@@ -12,8 +15,8 @@ const Integrations = () => {
           ? 'https://test.salesforce.com'
           : 'https://login.salesforce.com';
 
-      const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_SF_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-        process.env.NEXT_PUBLIC_SF_REDIRECT_URI!
+      const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${SF_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+        SF_REDIRECT_URI
       )}&scope=api refresh_token`;
 
       window.location.href = authUrl;
