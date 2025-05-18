@@ -4,8 +4,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { env } = req.query;
 
-  const clientId = process.env.SF_CLIENT_ID;
-  const redirectUri = process.env.SF_REDIRECT_URI;
+  const clientId = import.meta.env.NEXT_PUBLIC_SF_CLIENT_ID;
+  const redirectUri = import.meta.env.NEXT_PUBLIC_SF_REDIRECT_URI;
 
   const baseUrl = env === 'sandbox' ? 'https://test.salesforce.com' : 'https://login.salesforce.com';
 
