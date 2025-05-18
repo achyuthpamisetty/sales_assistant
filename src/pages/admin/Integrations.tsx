@@ -6,8 +6,17 @@ const Integrations = () => {
 
   const handleConnect = () => {
     if (salesforceEnv) {
-      alert(`Connecting to Salesforce ${salesforceEnv}`);
-      // You can replace this alert with your actual connection logic
+      // Redirect to your custom OAuth login handler
+      const baseUrl =
+        salesforceEnv === 'sandbox'
+          ? 'https://test.salesforce.com'
+          : 'https://login.salesforce.com';
+
+      const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_SF_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+        process.env.NEXT_PUBLIC_SF_REDIRECT_URI!
+      )}&scope=api refresh_token`;
+
+      window.location.href = authUrl;
     } else {
       alert('Please select a Salesforce environment');
     }
