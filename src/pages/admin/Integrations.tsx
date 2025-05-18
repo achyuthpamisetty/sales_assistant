@@ -15,7 +15,7 @@ const Integrations = () => {
 
     const baseUrl =
       salesforceEnv === 'sandbox'
-        ? 'https://empathetic-panda-5ixqr3-dev-ed.trailblaze.lightning.force.com/'
+        ? 'https://test.salesforce.com'
         : 'https://login.salesforce.com';
 
     const authUrl = `${baseUrl}/services/oauth2/authorize?response_type=code&client_id=${encodeURIComponent(
