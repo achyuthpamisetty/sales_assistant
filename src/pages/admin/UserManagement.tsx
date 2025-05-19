@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { UserPlus, Search, Edit, Shield } from 'lucide-react';
+import { UserPlus, Search, Edit, Shield, Mail, X, Check, Ban, PauseCircle } from 'lucide-react';
 
 interface User {
   id: string;
   name: string;
   email: string;
   role: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'frozen';
   lastLogin: string;
+}
+
+interface UserFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  sendAccessLink: boolean;
 }
 
 const UserManagement = () => {
@@ -38,6 +46,37 @@ const UserManagement = () => {
     },
   ]);
 
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [formData, setFormData] = useState<UserFormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: 'Sales Representative',
+    sendAccessLink: true,
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle user creation logic here
+    console.log('Creating user:', formData);
+    setShowAddUser(false);
+  };
+
+  const handleSendInvitation = async (userId: string) => {
+    // Handle sending invitation logic
+    console.log('Sending invitation to user:', userId);
+  };
+
+  const handleDeactivate = async (userId: string) => {
+    // Handle deactivation logic
+    console.log('Deactivating user:', userId);
+  };
+
+  const handleFreeze = async (userId: string) => {
+    // Handle freeze logic
+    console.log('Freezing user:', userId);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -46,13 +85,108 @@ const UserManagement = () => {
           <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
           <p className="text-slate-500">Manage user accounts and permissions</p>
         </div>
-        <button className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors">
+        <button 
+          onClick={() => setShowAddUser(true)}
+          className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+        >
           <UserPlus className="mr-2 h-4 w-4" />
           Add New User
         </button>
       </div>
 
-      {/* Filter Bar */}
+      {/* Add User Modal */}
+      {showAddUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Add New User</h2>
+              <button onClick={() => setShowAddUser(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700">First Name</label>
+                  <input
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                    className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700">Last Name</label>
+                  <input
+                    type="text"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                    className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Role</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({...formData, role: e.target.value})}
+                  className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                >
+                  <option>Sales Representative</option>
+                  <option>Sales Manager</option>
+                  <option>Admin</option>
+                </select>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="sendAccessLink"
+                  checked={formData.sendAccessLink}
+                  onChange={(e) => setFormData({...formData, sendAccessLink: e.target.checked})}
+                  className="h-4 w-4 rounded border-slate-300 text-primary-600"
+                />
+                <label htmlFor="sendAccessLink" className="ml-2 text-sm text-slate-700">
+                  Send access link via email
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddUser(false)}
+                  className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md"
+                >
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* User List */}
       <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div className="border-b p-4">
           <div className="flex items-center justify-between">
@@ -80,7 +214,6 @@ const UserManagement = () => {
           </div>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-slate-50">
@@ -105,56 +238,61 @@ const UserManagement = () => {
             <tbody className="divide-y divide-slate-200 bg-white">
               {users.map((user) => (
                 <tr key={user.id} className="hover:bg-slate-50">
-                  {/* User Avatar + Info */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
                         <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
                           <span className="text-primary-700 font-medium">
-                            {user.name
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')}
+                            {user.name.split(' ').map((n) => n[0]).join('')}
                           </span>
                         </div>
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-slate-900">
-                          {user.name}
-                        </div>
+                        <div className="text-sm font-medium text-slate-900">{user.name}</div>
                         <div className="text-sm text-slate-500">{user.email}</div>
                       </div>
                     </div>
                   </td>
-
-                  {/* Role */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="inline-flex rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800">
                       {user.role}
                     </span>
                   </td>
-
-                  {/* Status */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        user.status === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-slate-100 text-slate-800'
-                      }`}
-                    >
+                    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      user.status === 'active' ? 'bg-green-100 text-green-800' :
+                      user.status === 'frozen' ? 'bg-blue-100 text-blue-800' :
+                      'bg-slate-100 text-slate-800'
+                    }`}>
                       {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                     </span>
                   </td>
-
-                  {/* Last Login */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                     {user.lastLogin}
                   </td>
-
-                  {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => handleSendInvitation(user.id)}
+                        className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-primary-600"
+                        title="Send Invitation"
+                      >
+                        <Mail className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeactivate(user.id)}
+                        className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-red-600"
+                        title="Deactivate"
+                      >
+                        <Ban className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleFreeze(user.id)}
+                        className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-blue-600"
+                        title="Freeze"
+                      >
+                        <PauseCircle className="h-4 w-4" />
+                      </button>
                       <button className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-primary-600">
                         <Shield className="h-4 w-4" />
                       </button>
@@ -169,7 +307,6 @@ const UserManagement = () => {
           </table>
         </div>
 
-        {/* Footer */}
         <div className="border-t px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-sm text-slate-500">

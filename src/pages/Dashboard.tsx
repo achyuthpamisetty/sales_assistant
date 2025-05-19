@@ -4,7 +4,7 @@ import { useSalesforce } from '../context/SalesforceContext';
 import StatCard from '../components/dashboard/StatCard';
 import OpportunityChart from '../components/dashboard/OpportunityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
-import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Award, Calendar, Mail, HelpCircle, BarChart2 } from 'lucide-react';
+import { Users, Briefcase, PhoneCall, TrendingUp, ArrowRight, DollarSign, Flame, Award, Calendar, Mail, HelpCircle, BarChart2, Star, Trophy, Newspaper, Phone } from 'lucide-react';
 
 // --- Recent Emails Component (inline for single file use) ---
 const dummyEmails = [
@@ -385,106 +385,99 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Improved High-Scoring Leads Section */}
-      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-        <div className="border-b p-4">
-          <h2 className="text-lg font-semibold text-slate-900">High-Scoring Leads</h2>
+      {/* High Scoring Leads Section - Updated Style */}
+      <div className="bg-white rounded-xl shadow border p-6 mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Star size={18}/> High Scoring Leads
+          </h2>
+          <Link to="/leads" className="text-sm text-blue-600 hover:text-blue-700">View All</Link>
         </div>
-        <div className="divide-y">
-          {highScoringLeads.length > 0 ? (
-            highScoringLeads.slice(0, 3).map(lead => (
-              <div key={lead.id} className="block p-4 hover:bg-slate-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-base">{lead.firstName} {lead.lastName}</span>
-                      {lead.salesforceUrl && (
-                        <a
-                          href={lead.salesforceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="View in Salesforce"
-                          className="inline-flex items-center"
-                        >
-                          {/* Salesforce logo SVG */}
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" className="ml-1">
-                            <circle cx="16" cy="16" r="16" fill="#00A1E0"/>
-                            <text x="16" y="22" textAnchor="middle" fontSize="15" fill="#fff" fontFamily="Arial, sans-serif">SF</text>
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-500">{lead.company}</p>
-                    <p className="text-sm text-slate-500">{lead.phone}</p>
-                    <p className="text-sm text-slate-500">{lead.email}</p>
-                  </div>
-                  <div className="text-right min-w-[90px]">
-                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800">
-                      Score: {lead.leadScore}
-                    </span>
-                    <div className="mt-2 w-full rounded-full bg-slate-200 h-2">
-                      <div
-                        className="rounded-full bg-green-600 h-2"
-                        style={{ width: `${lead.leadScore}%` }}
-                      />
-                    </div>
-                  </div>
+        <div className="divide-y divide-slate-200">
+          {highScoringLeads.map(lead => (
+            <Link 
+              key={lead.id} 
+              to={`/leads/${lead.id}`}
+              className="block py-4 hover:bg-slate-50 transition-colors"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-medium text-slate-900">{lead.firstName} {lead.lastName}</h3>
+                  <p className="text-sm text-slate-600">{lead.company}</p>
+                </div>
+                <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                  Score: {lead.leadScore}
+                </span>
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-4 text-sm text-slate-600">
+                <div className="flex items-center gap-1">
+                  <Mail className="h-4 w-4"/> {lead.email}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Phone className="h-4 w-4"/> {lead.phone}
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="p-4 text-slate-600 text-sm">No high-scoring leads found.</div>
-          )}
+            </Link>
+          ))}
         </div>
-        <div className="border-t p-3">
-          <Link
-            to="/leads"
-            className="flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
-          >
-            View All Leads
-          </Link>
-          
-              {/* 7. Team Leaderboard */}
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><Award size={18}/> Top Performers</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-slate-600">
-              <th className="text-left py-1">Rep</th>
-              <th className="text-left py-1">Deals</th>
-              <th className="text-left py-1">Revenue</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teamLeaderboard.map(rep => (
-              <tr key={rep.name} className="border-t">
-                <td className="py-1">{rep.name}</td>
-                <td className="py-1">{rep.deals}</td>
-                <td className="py-1">${rep.revenue.toLocaleString()}</td>
+      </div>
+
+      {/* Team Leaderboard - Updated Style */}
+      <div className="bg-white rounded-xl shadow border p-6 mt-8">
+        <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 mb-4">
+          <Trophy size={18}/> Top Performers
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="text-left text-sm text-slate-600">
+                <th className="pb-3 font-medium">Rep</th>
+                <th className="pb-3 font-medium">Deals</th>
+                <th className="pb-3 font-medium">Revenue</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {teamLeaderboard.map(rep => (
+                <tr key={rep.name} className="text-sm">
+                  <td className="py-3">{rep.name}</td>
+                  <td className="py-3">{rep.deals}</td>
+                  <td className="py-3">${rep.revenue.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-          {/* 10. Company News & Resource Center */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Company News</h2>
-          <ul className="list-disc list-inside text-sm text-slate-700">
+
+      {/* Company News & Resource Center - Updated Style */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="bg-white rounded-xl shadow border p-6">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <Newspaper size={18}/> Company News
+          </h2>
+          <ul className="space-y-3">
             {companyNews.map((news, idx) => (
-              <li key={idx}><a href={news.url} className="text-blue-600 hover:underline">{news.headline}</a></li>
+              <li key={idx} className="hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                <a href={news.url} className="text-blue-600 hover:text-blue-800 text-sm">
+                  {news.headline}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-slate-900 flex items-center gap-2"><HelpCircle size={18}/> Resource Center</h2>
-          <ul className="list-disc list-inside text-sm text-slate-700">
-            {helpLinks.map((hl, idx) => (
-              <li key={idx}><a href={hl.url} className="text-blue-600 hover:underline">{hl.label}</a></li>
+        <div className="bg-white rounded-xl shadow border p-6">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <HelpCircle size={18}/> Resource Center
+          </h2>
+          <ul className="space-y-3">
+            {helpLinks.map((link, idx) => (
+              <li key={idx} className="hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                <a href={link.url} className="text-blue-600 hover:text-blue-800 text-sm">
+                  {link.label}
+                </a>
+              </li>
             ))}
           </ul>
-        </div>
-      </div>
         </div>
       </div>
     </div>
