@@ -12,6 +12,7 @@ const AuthPage = lazy(() => import('./pages/auth/AuthPage'));
 
 // Lazy loaded pages
 const Dashboard = lazy(() => import('./pages/Dashboard'));
+const SearchResults = lazy(() => import('./pages/SearchResults'));
 const Leads = lazy(() => import('./pages/Leads'));
 const LeadDetail = lazy(() => import('./pages/LeadDetail'));
 const Accounts = lazy(() => import('./pages/Accounts'));
@@ -24,7 +25,7 @@ const OpportunityPipeline = lazy(() => import('./pages/OpportunityPipeline'));
 const EmailComposer = lazy(() => import('./pages/EmailComposer'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const Permissions = lazy(() => import('./pages/admin/Permissions'));
-const Integrations = lazy(() => import('./pages/admin/Integrations')); // 👈 NEW LINE
+const Integrations = lazy(() => import('./pages/admin/Integrations'));
 
 function App() {
   return (
@@ -40,6 +41,17 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/search"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SearchResults />
                   </Layout>
                 </ProtectedRoute>
               }
@@ -178,17 +190,18 @@ function App() {
             />
 
             <Route
-  path="/admin/slack"
-  element={
-    <ProtectedRoute>
-      <Layout>
-        <SlackIntegration />
-      </Layout>
-    </ProtectedRoute>
-  }
-/>
+              path="/admin/slack"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <SlackIntegration />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
             <Route
-              path="/admin/integrations" // 👈 NEW ROUTE
+              path="/admin/integrations"
               element={
                 <ProtectedRoute>
                   <Layout>
